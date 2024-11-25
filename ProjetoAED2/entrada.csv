@@ -1,0 +1,28 @@
+15,5,3,8
+Cardiologia,2
+Ortopedia,3
+Neurologia,3
+Dr. Manoel Gomes,0
+Dr. Carlos Silva,0
+Dra. Maria Santos,1
+Dr. João Oliveira,2
+Dra. Ana Lima,2
+Dr. Pedro Costa,2
+Dra. Julia Ferreira,1
+Dr. Ricardo Souza,0
+Dra. Patricia Mendes,1
+0,João Silva,65,75.5,1.70,Dor no peito e falta de ar,Atenolol 50mg,85999999999,9,0
+1,Maria Oliveira,45,80.0,1.75,Dor nas costas crônica,Nimesulida,85988888888,7,1
+2,José Santos,70,68.0,1.65,Dores de cabeça frequentes,Dipirona,85977777777,8,2
+3,Antonio Pereira,55,90.0,1.80,Arritmia cardíaca,Propranolol,85966666666,9,0
+4,Ana Costa,35,65.5,1.60,Lesão no joelho,Ibuprofeno,85955555555,6,1
+5,Clara Ferreira,62,70.0,1.68,Tonturas e vertigens,Sem medicação,85944444444,8,2
+6,Roberto Lima,48,85.5,1.72,Pressão alta,Losartana,85933333333,7,0
+7,Paulo Souza,58,78.0,1.70,Hérnia de disco,Toragesic,85922222222,8,1
+8,Lucia Mendes,41,69.5,1.65,Enxaqueca crônica,Amitriptilina,85911111111,9,2
+9,Carlos Alberto,52,82.0,1.75,Insuficiência cardíaca,Furosemida,85900000000,10,0
+10,Teresa Santos,72,65.0,1.62,Osteoporose avançada,Cálcio e Vitamina D,85999999998,8,1
+11,Patricia Lima,38,71.5,1.68,Cefaleia tensional,Paracetamol,85988888887,6,2
+12,Ricardo Oliveira,63,88.0,1.78,Angina instável,Isordil,85977777766,10,0
+13,Sandra Costa,44,92.0,1.82,Artrite reumatoide,Metotrexato,85966666655,7,1
+14,Pedro Ferreira,51,73.5,1.71,Epilepsia,Carbamazepina,85955555544,8,2

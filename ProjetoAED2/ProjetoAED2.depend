@@ -1,0 +1,9 @@
+# depslib dependency file v1.0
+1732500577 source:c:\users\wilso\documents\estudos\aed 2\projetoaed2\main.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<time.h>
+	<stdbool.h>
+	<locale.h>
+
