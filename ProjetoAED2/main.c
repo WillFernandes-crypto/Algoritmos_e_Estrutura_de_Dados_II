@@ -611,7 +611,6 @@ void gerarRelatorioCompleto(FILE* fp, int semana, int num_medicos) {
 
     // Ordenar médicos por horas trabalhadas
     MedicoRelatorio* relatorio = malloc(num_medicos * sizeof(MedicoRelatorio));
-    // ... código de ordenação ...
 
     free(relatorio);
 }
