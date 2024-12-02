@@ -262,7 +262,7 @@ void imprimirRepresentante(Particao* p, int elemento) {
     }
 
     int rep = obterRepresentante(p, elemento);
-    printf("O representante do subconjunto que contém %d é %d\n",
+    printf("O representante do subconjunto que contem %d e %d\n",
            elemento, rep);
 }
 
@@ -271,9 +271,9 @@ void unirSubconjuntos(Particao* p, int elemento1, int elemento2) {
     if (!saida) return;
 
     char detalhes[1000];
-    sprintf(detalhes, "Tentativa de união dos subconjuntos contendo elementos %d e %d",
+    sprintf(detalhes, "Tentativa de uniao dos subconjuntos contendo elementos %d e %d",
             elemento1, elemento2);
-    registrarOperacao(saida, "União de Subconjuntos", detalhes);
+    registrarOperacao(saida, "Uniao de Subconjuntos", detalhes);
 
     // Validação de elementos
     if (elemento1 < 1 || elemento1 > p->n || elemento2 < 1 || elemento2 > p->n) {
@@ -290,7 +290,7 @@ void unirSubconjuntos(Particao* p, int elemento1, int elemento2) {
     // Log do estado inicial
     fprintf(saida, "Estado inicial dos subconjuntos:\n");
     if (subconj1 != -1) {
-        fprintf(saida, "Subconjunto 1 (contém elemento %d): [", elemento1);
+        fprintf(saida, "Subconjunto 1 (contem elemento %d): [", elemento1);
         for (int i = p->subconj[subconj1].inicio; i <= p->subconj[subconj1].fim; i++) {
             fprintf(saida, "%d", p->vetor[i]);
             if (i < p->subconj[subconj1].fim) fprintf(saida, ", ");
@@ -298,7 +298,7 @@ void unirSubconjuntos(Particao* p, int elemento1, int elemento2) {
         fprintf(saida, "]\n");
     }
     if (subconj2 != -1) {
-        fprintf(saida, "Subconjunto 2 (contém elemento %d): [", elemento2);
+        fprintf(saida, "Subconjunto 2 (contem elemento %d): [", elemento2);
         for (int i = p->subconj[subconj2].inicio; i <= p->subconj[subconj2].fim; i++) {
             fprintf(saida, "%d", p->vetor[i]);
             if (i < p->subconj[subconj2].fim) fprintf(saida, ", ");
@@ -307,9 +307,9 @@ void unirSubconjuntos(Particao* p, int elemento1, int elemento2) {
     }
 
     if (subconj1 == -1 || subconj2 == -1 || subconj1 == subconj2) {
-        sprintf(detalhes, "Não é possível unir os subconjuntos: %s",
-                subconj1 == subconj2 ? "Elementos no mesmo subconjunto" : "Elemento(s) não encontrado(s)");
-        registrarOperacao(saida, "Erro na União", detalhes);
+        sprintf(detalhes, "Não e possível unir os subconjuntos: %s",
+                subconj1 == subconj2 ? "Elementos no mesmo subconjunto" : "Elemento(s) nao encontrado(s)");
+        registrarOperacao(saida, "Erro na Uniao", detalhes);
         printf("%s\n", detalhes);
         fclose(saida);
         return;
@@ -319,7 +319,7 @@ void unirSubconjuntos(Particao* p, int elemento1, int elemento2) {
     reorganizarSubconjuntos(p, subconj1, subconj2);
 
     // Log do resultado
-    fprintf(saida, "\nResultado da união:\n");
+    fprintf(saida, "\nResultado da uniao:\n");
     fprintf(saida, "Novo subconjunto: [");
     for (int i = p->subconj[subconj1].inicio; i <= p->subconj[subconj1].fim; i++) {
         fprintf(saida, "%d", p->vetor[i]);
@@ -327,7 +327,7 @@ void unirSubconjuntos(Particao* p, int elemento1, int elemento2) {
     }
     fprintf(saida, "]\n");
 
-    registrarOperacao(saida, "União Concluída", "Subconjuntos unidos com sucesso");
+    registrarOperacao(saida, "Uniao Concluída", "Subconjuntos unidos com sucesso");
     printf("Subconjuntos unidos com sucesso!\n");
     fclose(saida);
 }
@@ -363,13 +363,13 @@ void ordenarSubconjunto(Particao* p, int elemento, MetodoOrdenacao metodo) {
     // Usa clock_t para maior precisão
     clock_t inicio_ord = clock();
     char detalhes[1000];
-    sprintf(detalhes, "Iniciando ordenação do subconjunto contendo elemento %d", elemento);
-    registrarOperacao(saida, "Ordenação", detalhes);
+    sprintf(detalhes, "Iniciando ordenacao do subconjunto contendo elemento %d", elemento);
+    registrarOperacao(saida, "Ordenacao", detalhes);
 
     int subconj = encontrarSubconjunto(p, elemento);
     if (subconj == -1) {
-        sprintf(detalhes, "Elemento %d não encontrado em nenhum subconjunto", elemento);
-        registrarOperacao(saida, "Erro na Ordenação", detalhes);
+        sprintf(detalhes, "Elemento %d nao encontrado em nenhum subconjunto", elemento);
+        registrarOperacao(saida, "Erro na Ordenacao", detalhes);
         printf("%s\n", detalhes);
         fclose(saida);
         return;
@@ -414,7 +414,7 @@ void ordenarSubconjunto(Particao* p, int elemento, MetodoOrdenacao metodo) {
     }
     fprintf(saida, "]\n");
 
-    registrarOperacao(saida, "Ordenação Concluída", detalhes);
+    registrarOperacao(saida, "Ordenacao Concluida", detalhes);
     
     fflush(saida);
     fclose(saida);
@@ -444,9 +444,9 @@ void bubbleSortComLog(int A[], int inicio, int fim, FILE* saida) {
     double tempo_ord = (fim_ord - inicio_ord) / 1000.0;
 
     fprintf(saida, "\nEstatísticas do Bubble Sort:\n");
-    fprintf(saida, "Total de comparações: %d\n", comparacoes);
-    fprintf(saida, "Total de movimentações: %d\n", movimentacoes);
-    fprintf(saida, "Tempo de ordenação: %.3f milissegundos\n", tempo_ord);
+    fprintf(saida, "Total de comparacoes: %d\n", comparacoes);
+    fprintf(saida, "Total de movimentacoes: %d\n", movimentacoes);
+    fprintf(saida, "Tempo de ordenacao: %.3f milissegundos\n", tempo_ord);
 }
 
 void insertionSortComLog(int A[], int inicio, int fim, FILE* saida) {
@@ -494,8 +494,8 @@ void insertionSortComLog(int A[], int inicio, int fim, FILE* saida) {
 
     fprintf(saida, "\nEstatísticas do Insertion Sort:\n");
     fprintf(saida, "Total de comparações: %d\n", comparacoes);
-    fprintf(saida, "Total de movimentações: %d\n", movimentacoes);
-    fprintf(saida, "Tempo de ordenação: %.3f milissegundos\n", tempo_ord);
+    fprintf(saida, "Total de movimentacoes: %d\n", movimentacoes);
+    fprintf(saida, "Tempo de ordenacao: %.3f milissegundos\n", tempo_ord);
 }
 
 void mergeSortComLog(int A[], int inicio, int fim, FILE* saida) {
@@ -545,7 +545,7 @@ void mergeSortComLog(int A[], int inicio, int fim, FILE* saida) {
 
         // Log do resultado da combinação
         for (int i = 0; i < nivel; i++) fprintf(saida, "  ");
-        fprintf(saida, "Resultado da combinação: [");
+        fprintf(saida, "Resultado da combinacao: [");
         for (int i = inicio; i <= fim; i++) {
             fprintf(saida, "%d", A[i]);
             if (i < fim) fprintf(saida, ", ");
@@ -558,8 +558,8 @@ void mergeSortComLog(int A[], int inicio, int fim, FILE* saida) {
             
             fprintf(saida, "\nEstatísticas do Merge Sort:\n");
             fprintf(saida, "Total de comparações: %d\n", comparacoes);
-            fprintf(saida, "Total de movimentações: %d\n", movimentacoes);
-            fprintf(saida, "Tempo de ordenação: %.3f milissegundos\n", tempo_ord);
+            fprintf(saida, "Total de movimentacoes: %d\n", movimentacoes);
+            fprintf(saida, "Tempo de ordenacao: %.3f milissegundos\n", tempo_ord);
         }
     }
 }
@@ -655,9 +655,9 @@ void quickSortComLog(int A[], int inicio, int fim, FILE* saida) {
             double tempo_ord = ((double)(fim_ord - inicio_ord) * 1000.0) / CLOCKS_PER_SEC;
             
             fprintf(saida, "\nEstatísticas do Quick Sort:\n");
-            fprintf(saida, "Total de comparações: %d\n", comparacoes);
-            fprintf(saida, "Total de movimentações: %d\n", movimentacoes);
-            fprintf(saida, "Tempo de ordenação: %.3f milissegundos\n", tempo_ord);
+            fprintf(saida, "Total de comparacoes: %d\n", comparacoes);
+            fprintf(saida, "Total de movimentacoes: %d\n", movimentacoes);
+            fprintf(saida, "Tempo de ordenacao: %.3f milissegundos\n", tempo_ord);
         }
     }
 }
@@ -667,11 +667,11 @@ int particionarComLog(int A[], int inicio, int fim, FILE* saida,
     int pivo = A[fim];
     int i = inicio - 1;
 
-    fprintf(saida, "  Pivô escolhido: %d\n", pivo);
+    fprintf(saida, "  Pivo escolhido: %d\n", pivo);
 
     for (int j = inicio; j < fim; j++) {
         (*comparacoes)++;
-        fprintf(saida, "    Comparando A[%d]=%d com pivô %d: ", j, A[j], pivo);
+        fprintf(saida, "    Comparando A[%d]=%d com pivo %d: ", j, A[j], pivo);
         
         if (A[j] <= pivo) {
             i++;
@@ -690,7 +690,7 @@ int particionarComLog(int A[], int inicio, int fim, FILE* saida,
     }
 
     if (i + 1 != fim) {
-        fprintf(saida, "  Colocando pivô na posição final %d\n", i + 1);
+        fprintf(saida, "  Colocando pivo na posição final %d\n", i + 1);
         int temp = A[i + 1];
         A[i + 1] = A[fim];
         A[fim] = temp;
