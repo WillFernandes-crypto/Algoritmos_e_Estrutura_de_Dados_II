@@ -1,0 +1,100 @@
+# depslib dependency file v1.0
+1733129256 source:c:\users\wilso\documents\estudos\aed 2\projetoaed2\main.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<time.h>
+	<stdbool.h>
+	"paciente.h"
+	"medico.h"
+	"hospital.h"
+	"heap.h"
+	"agendamento.h"
+	"relatorio.h"
+	"escala.h"
+	"entrada.h"
+
+1733129226 c:\users\wilso\documents\estudos\aed 2\projetoaed2\paciente.h
+	<stdbool.h>
+	<time.h>
+
+1733129226 source:c:\users\wilso\documents\estudos\aed 2\projetoaed2\paciente.c
+	"paciente.h"
+	<stdio.h>
+	<stdlib.h>
+
+1733129226 source:c:\users\wilso\documents\estudos\aed 2\projetoaed2\medico.c
+	"medico.h"
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+
+1733129226 c:\users\wilso\documents\estudos\aed 2\projetoaed2\medico.h
+	<stdbool.h>
+	"paciente.h"
+
+1733129226 source:c:\users\wilso\documents\estudos\aed 2\projetoaed2\hospital.c
+	"hospital.h"
+	<stdio.h>
+	<stdlib.h>
+
+1733129226 c:\users\wilso\documents\estudos\aed 2\projetoaed2\hospital.h
+	<stdbool.h>
+	"paciente.h"
+	"medico.h"
+
+1733129226 c:\users\wilso\documents\estudos\aed 2\projetoaed2\heap.h
+	"paciente.h"
+
+1733129226 source:c:\users\wilso\documents\estudos\aed 2\projetoaed2\heap.c
+	<stdio.h>
+	<stdlib.h>
+	"heap.h"
+	"paciente.h"
+
+1733129226 source:c:\users\wilso\documents\estudos\aed 2\projetoaed2\agendamento.c
+	"agendamento.h"
+	<stdio.h>
+	<stdlib.h>
+	"medico.h"
+
+1733129226 c:\users\wilso\documents\estudos\aed 2\projetoaed2\agendamento.h
+	"paciente.h"
+	"medico.h"
+	"hospital.h"
+
+1733129226 source:c:\users\wilso\documents\estudos\aed 2\projetoaed2\entrada.c
+	"entrada.h"
+	<stdio.h>
+	<stdlib.h>
+	"hospital.h"
+
+1733129226 c:\users\wilso\documents\estudos\aed 2\projetoaed2\entrada.h
+	"paciente.h"
+	"medico.h"
+	"hospital.h"
+
+1733129226 c:\users\wilso\documents\estudos\aed 2\projetoaed2\relatorio.h
+	<stdio.h>
+	"paciente.h"
+	"medico.h"
+	"hospital.h"
+	"heap.h"
+
+1733129226 source:c:\users\wilso\documents\estudos\aed 2\projetoaed2\relatorio.c
+	"relatorio.h"
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+
+1733129226 source:c:\users\wilso\documents\estudos\aed 2\projetoaed2\escala.c
+	"escala.h"
+	"hospital.h"
+	"agendamento.h"
+
+1733129226 c:\users\wilso\documents\estudos\aed 2\projetoaed2\escala.h
+	<stdio.h>
+	"paciente.h"
+	"medico.h"
+	"heap.h"
+
