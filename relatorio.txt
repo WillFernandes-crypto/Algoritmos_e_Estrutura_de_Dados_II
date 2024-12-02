@@ -1,0 +1,130 @@
+ESCALA DE CONSULTAS
+===================
+
+SEMANA 1
+--------
+
+DIA 1
+-------
+
+08:00
+Sala 1: Dr(a). Dr. Manoel Gomes atende Carlos Alberto - Cardiologia
+        Retorno agendado para semana 2, dia 1, ‡s 08:00, Sala 1
+Sala 2: Dr(a). Dr. Carlos Silva atende Ricardo Oliveira - Cardiologia
+        Retorno agendado para semana 2, dia 1, ‡s 08:00, Sala 2
+Sala 3: Dr(a). Dr. Ricardo Souza atende Jo√£o Silva - Cardiologia
+        Retorno agendado para semana 2, dia 1, ‡s 08:00, Sala 3
+Sala 4: VAZIA - Sem mÈdico disponÌvel
+Sala 5: Dr(a). Dr. Jo√£o Oliveira atende Lucia Mendes - Neurologia
+        Retorno agendado para semana 2, dia 1, ‡s 08:00, Sala 4
+
+09:00
+Sala 1: Dr(a). Dra. Maria Santos atende Paulo Souza - Ortopedia
+        Retorno agendado para semana 2, dia 1, ‡s 08:00, Sala 5
+Sala 2: Dr(a). Dra. Ana Lima atende Jos√© Santos - Neurologia
+        Retorno agendado para semana 2, dia 1, ‡s 08:00, Sala 6
+Sala 3: Dr(a). Dra. Julia Ferreira atende Teresa Santos - Ortopedia
+        Retorno agendado para semana 2, dia 1, ‡s 08:00, Sala 7
+Sala 4: Dr(a). Dr. Pedro Costa atende Clara Ferreira - Neurologia
+        Retorno agendado para semana 2, dia 1, ‡s 08:00, Sala 8
+Sala 5: Dr(a). Dr. Manoel Gomes atende Roberto Lima - Cardiologia
+        Retorno agendado para semana 2, dia 1, ‡s 09:00, Sala 1
+
+10:00
+Sala 1: Dr(a). Dra. Maria Santos atende Maria Oliveira - Ortopedia
+        Retorno agendado para semana 2, dia 1, ‡s 09:00, Sala 2
+Sala 2: Dr(a). Dra. Julia Ferreira atende Sandra Costa - Ortopedia
+        Retorno agendado para semana 2, dia 1, ‡s 09:00, Sala 3
+Sala 3: Dr(a). Dr. Jo√£o Oliveira atende Patricia Lima - Neurologia
+        Retorno agendado para semana 2, dia 1, ‡s 09:00, Sala 4
+Sala 4: VAZIA - Sem mÈdico disponÌvel
+Sala 5: Dr(a). Dr. Carlos Silva atende  - Cardiologia
+        Retorno agendado para semana 2, dia 1, ‡s 09:00, Sala 5
+
+11:00
+DIA 2
+-------
+
+08:00
+DIA 3
+-------
+
+08:00
+DIA 4
+-------
+
+08:00
+DIA 5
+-------
+
+08:00
+
+ESCALA DE CONSULTAS DE RETORNO
+=============================
+
+SEMANA 1
+--------
+
+DIA 1
+-------
+
+Hor·rio: 08:00
+----------------
+Sala 1: Dr(a). Dr. Manoel Gomes atende Carlos Alberto - Cardiologia (Retorno)
+Sala 5: Dr(a). Dr. Carlos Silva atende  - Cardiologia (Retorno)
+Sala 4: Dr(a). Dr. Jo√£o Oliveira atende Patricia Lima - Neurologia (Retorno)
+Sala 3: Dr(a). Dra. Julia Ferreira atende Sandra Costa - Ortopedia (Retorno)
+Sala 2: VAZIA - Paciente Maria Oliveira faltou ao retorno (nova prioridade: 4)
+Sala 1: Dr(a). Dr. Manoel Gomes atende Roberto Lima - Cardiologia (Retorno)
+Sala 8: VAZIA - Paciente Clara Ferreira faltou ao retorno (nova prioridade: 4)
+Sala 7: Dr(a). Dra. Julia Ferreira atende Teresa Santos - Ortopedia (Retorno)
+Sala 6: Dr(a). Dra. Ana Lima atende Jos√© Santos - Neurologia (Retorno)
+Sala 5: Dr(a). Dra. Maria Santos atende Paulo Souza - Ortopedia (Retorno)
+Sala 4: Dr(a). Dr. Jo√£o Oliveira atende Lucia Mendes - Neurologia (Retorno)
+Sala 3: Dr(a). Dr. Ricardo Souza atende Jo√£o Silva - Cardiologia (Retorno)
+Sala 2: Dr(a). Dr. Carlos Silva atende Ricardo Oliveira - Cardiologia (Retorno)
+
+Hor·rio: 09:00
+----------------
+Sala 1: Dr(a). Dra. Maria Santos atende Maria Oliveira - Ortopedia (Retorno)
+Sala 6: Dr(a). Dr. Pedro Costa atende Clara Ferreira - Neurologia (Retorno)
+
+Hor·rio: 10:00
+----------------
+
+DIA 2
+-------
+
+Hor·rio: 08:00
+----------------
+
+DIA 3
+-------
+
+Hor·rio: 08:00
+----------------
+
+DIA 4
+-------
+
+Hor·rio: 08:00
+----------------
+
+DIA 5
+-------
+
+Hor·rio: 08:00
+----------------
+
+
+RELAT√ìRIO DE HORAS TRABALHADAS POR M√âDICO
+========================================
+
+Dr(a). Dr. Carlos Silva (Cardiologia): 4 horas
+Dr(a). Dr. Jo√£o Oliveira (Neurologia): 4 horas
+Dr(a). Dr. Manoel Gomes (Cardiologia): 4 horas
+Dr(a). Dra. Julia Ferreira (Ortopedia): 4 horas
+Dr(a). Dra. Maria Santos (Ortopedia): 4 horas
+Dr(a). Dr. Pedro Costa (Neurologia): 2 horas
+Dr(a). Dr. Ricardo Souza (Cardiologia): 2 horas
+Dr(a). Dra. Ana Lima (Neurologia): 2 horas
