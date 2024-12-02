@@ -337,10 +337,10 @@ void reorganizarSubconjuntos(Particao* p, int subconj1, int subconj2) {
 }
 
 void ordenarSubconjunto(Particao* p, int elemento, MetodoOrdenacao metodo) {
-    // Abre o arquivo em modo append binário para preservar o conteúdo existente
     FILE* saida = fopen("resultado.txt", "ab");
     if (!saida) return;
 
+    // Usa clock_t para maior precisão
     clock_t inicio_ord = clock();
     char detalhes[1000];
     sprintf(detalhes, "Iniciando ordenação do subconjunto contendo elemento %d", elemento);
@@ -394,13 +394,9 @@ void ordenarSubconjunto(Particao* p, int elemento, MetodoOrdenacao metodo) {
     }
     fprintf(saida, "]\n");
 
-    double tempo_ord = (double)(clock() - inicio_ord) / CLOCKS_PER_SEC;
-    fprintf(saida, "Tempo de ordenação: %.6f segundos\n", tempo_ord);
-
-    sprintf(detalhes, "Ordenação concluída em %.6f segundos", tempo_ord);
     registrarOperacao(saida, "Ordenação Concluída", detalhes);
     
-    fflush(saida); // Força a escrita no arquivo
+    fflush(saida);
     fclose(saida);
 }
 
