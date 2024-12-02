@@ -1,0 +1,14 @@
+# depslib dependency file v1.0
+1733141513 source:c:\users\wilso\documents\estudos\aed 2\algoritmos_e_estrutura_de_dados_ii\trabalho_substitutivo\main.c
+	<stdio.h>
+	<stdlib.h>
+	<time.h>
+	"ordenacao.h"
+
+1733141543 c:\users\wilso\documents\estudos\aed 2\algoritmos_e_estrutura_de_dados_ii\trabalho_substitutivo\ordenacao.h
+
+1733141608 source:c:\users\wilso\documents\estudos\aed 2\algoritmos_e_estrutura_de_dados_ii\trabalho_substitutivo\ordenacao.c
+	<stdio.h>
+	<stdlib.h>
+	"ordenacao.h"
+

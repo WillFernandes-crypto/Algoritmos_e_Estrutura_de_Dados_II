@@ -1,0 +1,12 @@
+﻿=== Resultado da Execução ===
+
+Tempo total de execução: 16,469000 segundos
+Tamanho do vetor (n): 5
+Número de subconjuntos (k): 2
+
+Estado final do vetor:
+[1, 2, 3, 4, 5]
+
+Estado final dos subconjuntos:
+Subconjunto 1: [1, 2, 3] (início: 0, fim: 2)
+Subconjunto 2: [4, 5] (início: 3, fim: 4)
