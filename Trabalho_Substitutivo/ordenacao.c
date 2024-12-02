@@ -2,9 +2,29 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <time.h>
+#ifdef _WIN32
+#include <windows.h>
+#else
+#include <sys/time.h>
+#endif
 #include "ordenacao.h"
 
 extern FILE* arquivo_log;
+
+// Função auxiliar para obter tempo em microssegundos
+long long getMicrotime() {
+#ifdef _WIN32
+    LARGE_INTEGER frequency;
+    LARGE_INTEGER start;
+    QueryPerformanceFrequency(&frequency);
+    QueryPerformanceCounter(&start);
+    return (start.QuadPart * 1000000) / frequency.QuadPart;
+#else
+    struct timeval tv;
+    gettimeofday(&tv, NULL);
+    return tv.tv_sec * 1000000LL + tv.tv_usec;
+#endif
+}
 
 void bubbleSort(int A[], int inicio, int fim) {
     int comprimento = fim - inicio + 1;
@@ -403,45 +423,30 @@ void ordenarSubconjunto(Particao* p, int elemento, MetodoOrdenacao metodo) {
 void bubbleSortComLog(int A[], int inicio, int fim, FILE* saida) {
     int comprimento = fim - inicio + 1;
     int comparacoes = 0, movimentacoes = 0;
-
+    
     fprintf(saida, "Iniciando Bubble Sort com %d elementos\n\n", comprimento);
-
+    
+    long long inicio_ord = getMicrotime();
+    
     for (int i = 0; i < comprimento - 1; i++) {
-        fprintf(saida, "Passagem %d:\n", i + 1);
-        bool trocou = false;
-        
         for (int j = inicio; j < inicio + comprimento - i - 1; j++) {
-            fprintf(saida, "  Comparando A[%d]=%d com A[%d]=%d: ", j, A[j], j+1, A[j+1]);
-            comparacoes++;
-            
             if (A[j] > A[j + 1]) {
-                fprintf(saida, "troca\n");
+                // Trocar elementos
                 int temp = A[j];
                 A[j] = A[j + 1];
                 A[j + 1] = temp;
                 movimentacoes += 3;
-                trocou = true;
-            } else {
-                fprintf(saida, "mantém\n");
             }
         }
-        
-        fprintf(saida, "Estado após passagem %d: [", i + 1);
-        for (int k = inicio; k <= fim; k++) {
-            fprintf(saida, "%d", A[k]);
-            if (k < fim) fprintf(saida, ", ");
-        }
-        fprintf(saida, "]\n\n");
-        
-        if (!trocou) {
-            fprintf(saida, "Array já ordenado, parando Bubble Sort\n");
-            break;
-        }
     }
+    
+    long long fim_ord = getMicrotime();
+    double tempo_ord = (fim_ord - inicio_ord) / 1000.0;
 
     fprintf(saida, "\nEstatísticas do Bubble Sort:\n");
     fprintf(saida, "Total de comparações: %d\n", comparacoes);
     fprintf(saida, "Total de movimentações: %d\n", movimentacoes);
+    fprintf(saida, "Tempo de ordenação: %.3f milissegundos\n", tempo_ord);
 }
 
 void insertionSortComLog(int A[], int inicio, int fim, FILE* saida) {
@@ -449,7 +454,9 @@ void insertionSortComLog(int A[], int inicio, int fim, FILE* saida) {
     int comparacoes = 0, movimentacoes = 0;
 
     fprintf(saida, "Iniciando Insertion Sort com %d elementos\n\n", comprimento);
-
+    
+    clock_t inicio_ord = clock(); // Inicia contagem do tempo
+    
     for (int i = inicio + 1; i <= fim; i++) {
         int chave = A[i];
         int j = i - 1;
@@ -481,19 +488,25 @@ void insertionSortComLog(int A[], int inicio, int fim, FILE* saida) {
         }
         fprintf(saida, "]\n\n");
     }
+    
+    clock_t fim_ord = clock(); // Finaliza contagem do tempo
+    double tempo_ord = ((double)(fim_ord - inicio_ord) * 1000.0) / CLOCKS_PER_SEC;
 
-    fprintf(saida, "Estatísticas do Insertion Sort:\n");
+    fprintf(saida, "\nEstatísticas do Insertion Sort:\n");
     fprintf(saida, "Total de comparações: %d\n", comparacoes);
     fprintf(saida, "Total de movimentações: %d\n", movimentacoes);
+    fprintf(saida, "Tempo de ordenação: %.3f milissegundos\n", tempo_ord);
 }
 
 void mergeSortComLog(int A[], int inicio, int fim, FILE* saida) {
     static int nivel = 0;
     static int comparacoes = 0, movimentacoes = 0;
+    static long long inicio_ord;
     
     if (nivel == 0) {
         fprintf(saida, "Iniciando Merge Sort com %d elementos\n\n", fim - inicio + 1);
         comparacoes = movimentacoes = 0;
+        inicio_ord = getMicrotime();
     }
 
     if (inicio < fim) {
@@ -540,9 +553,13 @@ void mergeSortComLog(int A[], int inicio, int fim, FILE* saida) {
         fprintf(saida, "]\n\n");
 
         if (nivel == 0) {
+            long long fim_ord = getMicrotime();
+            double tempo_ord = (fim_ord - inicio_ord) / 1000.0; // Convertendo para milissegundos
+            
             fprintf(saida, "\nEstatísticas do Merge Sort:\n");
             fprintf(saida, "Total de comparações: %d\n", comparacoes);
             fprintf(saida, "Total de movimentações: %d\n", movimentacoes);
+            fprintf(saida, "Tempo de ordenação: %.3f milissegundos\n", tempo_ord);
         }
     }
 }
@@ -608,10 +625,12 @@ void mergeComLog(int A[], int inicio, int meio, int fim, FILE* saida,
 void quickSortComLog(int A[], int inicio, int fim, FILE* saida) {
     static int nivel = 0;
     static int comparacoes = 0, movimentacoes = 0;
+    static clock_t inicio_ord;
     
     if (nivel == 0) {
         fprintf(saida, "Iniciando Quick Sort com %d elementos\n\n", fim - inicio + 1);
         comparacoes = movimentacoes = 0;
+        inicio_ord = clock(); // Inicia contagem do tempo
     }
 
     if (inicio < fim) {
@@ -632,9 +651,13 @@ void quickSortComLog(int A[], int inicio, int fim, FILE* saida) {
         nivel--;
 
         if (nivel == 0) {
+            clock_t fim_ord = clock(); // Finaliza contagem do tempo
+            double tempo_ord = ((double)(fim_ord - inicio_ord) * 1000.0) / CLOCKS_PER_SEC;
+            
             fprintf(saida, "\nEstatísticas do Quick Sort:\n");
             fprintf(saida, "Total de comparações: %d\n", comparacoes);
             fprintf(saida, "Total de movimentações: %d\n", movimentacoes);
+            fprintf(saida, "Tempo de ordenação: %.3f milissegundos\n", tempo_ord);
         }
     }
 }

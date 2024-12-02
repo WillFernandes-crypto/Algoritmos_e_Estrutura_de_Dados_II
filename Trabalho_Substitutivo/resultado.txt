@@ -1,7 +1,7 @@
 ====== Log de Operações ======
 
 
-=== Ordenação (5.750 segundos) ===
+=== Ordenação (2.367 segundos) ===
 Iniciando ordenação do subconjunto contendo elemento 3
 Estado inicial do subconjunto: [1, 2, 3]
 
@@ -29,14 +29,15 @@ Resultado da combinação: [1, 2, 3]
 Estatísticas do Merge Sort:
 Total de comparações: 3
 Total de movimentações: 10
+Tempo de ordenação: 0.008 milissegundos
 
 Estado final do subconjunto: [1, 2, 3]
 
-=== Ordenação Concluída (5.750 segundos) ===
+=== Ordenação Concluída (2.367 segundos) ===
 Iniciando ordenação do subconjunto contendo elemento 3
 
 ====== Resultado Final ======
-Tempo total de execução: 6.229000 segundos
+Tempo total de execução: 2.847000 segundos
 Tamanho do vetor (n): 5
 Número de subconjuntos (k): 2
 
