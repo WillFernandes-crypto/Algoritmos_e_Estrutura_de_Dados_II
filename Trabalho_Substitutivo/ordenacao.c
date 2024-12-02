@@ -202,6 +202,9 @@ Particao* lerParticaoDeArquivo(const char* nomeArquivo) {
         definirRepresentante(p, i);
     }
 
+    // Adiciona verificação de ambiguidade
+    verificarAmbiguidade(p);
+
     fclose(arquivo);
     return p;
 }
@@ -357,11 +360,9 @@ void reorganizarSubconjuntos(Particao* p, int subconj1, int subconj2) {
 }
 
 void ordenarSubconjunto(Particao* p, int elemento, MetodoOrdenacao metodo) {
-    FILE* saida = fopen("resultado.txt", "ab");
+    FILE* saida = fopen("resultado.txt", "a");
     if (!saida) return;
 
-    // Usa clock_t para maior precisão
-    clock_t inicio_ord = clock();
     char detalhes[1000];
     sprintf(detalhes, "Iniciando ordenacao do subconjunto contendo elemento %d", elemento);
     registrarOperacao(saida, "Ordenacao", detalhes);
@@ -386,22 +387,73 @@ void ordenarSubconjunto(Particao* p, int elemento, MetodoOrdenacao metodo) {
     }
     fprintf(saida, "]\n\n");
 
-    // Executa a ordenação com log detalhado
+    // Cria uma cópia do vetor para não modificar o original durante os testes
+    int tamanho = fim - inicio + 1;
+    int* vetorTeste = (int*)malloc(tamanho * sizeof(int));
+    
+    // Executa a ordenação múltiplas vezes para obter uma média mais precisa
+    const int NUM_EXECUCOES = 1000;
+    double tempo_total = 0.0;
+    
     switch (metodo) {
         case BUBBLE_SORT:
             fprintf(saida, "Usando Bubble Sort:\n");
-            bubbleSortComLog(p->vetor, inicio, fim, saida);
+            for (int i = 0; i < NUM_EXECUCOES; i++) {
+                // Restaura o vetor ao estado original
+                memcpy(vetorTeste, &p->vetor[inicio], tamanho * sizeof(int));
+                
+                long long tempo_inicio = getMicrotime();
+                bubbleSort(vetorTeste, 0, tamanho - 1);
+                tempo_total += (getMicrotime() - tempo_inicio) / 1000000.0;
+            }
             break;
         case INSERTION_SORT:
             fprintf(saida, "Usando Insertion Sort:\n");
-            insertionSortComLog(p->vetor, inicio, fim, saida);
+            for (int i = 0; i < NUM_EXECUCOES; i++) {
+                memcpy(vetorTeste, &p->vetor[inicio], tamanho * sizeof(int));
+                
+                long long tempo_inicio = getMicrotime();
+                insertionSort(vetorTeste, 0, tamanho - 1);
+                tempo_total += (getMicrotime() - tempo_inicio) / 1000000.0;
+            }
             break;
         case MERGE_SORT:
             fprintf(saida, "Usando Merge Sort:\n");
-            mergeSortComLog(p->vetor, inicio, fim, saida);
+            for (int i = 0; i < NUM_EXECUCOES; i++) {
+                memcpy(vetorTeste, &p->vetor[inicio], tamanho * sizeof(int));
+                
+                long long tempo_inicio = getMicrotime();
+                mergeSort(vetorTeste, 0, tamanho - 1);
+                tempo_total += (getMicrotime() - tempo_inicio) / 1000000.0;
+            }
             break;
         case QUICK_SORT:
             fprintf(saida, "Usando Quick Sort:\n");
+            for (int i = 0; i < NUM_EXECUCOES; i++) {
+                memcpy(vetorTeste, &p->vetor[inicio], tamanho * sizeof(int));
+                
+                long long tempo_inicio = getMicrotime();
+                quickSort(vetorTeste, 0, tamanho - 1);
+                tempo_total += (getMicrotime() - tempo_inicio) / 1000000.0;
+            }
+            break;
+    }
+
+    // Calcula a média do tempo
+    double tempo_medio = tempo_total / NUM_EXECUCOES;
+
+    // Executa a ordenação final no vetor original
+    switch (metodo) {
+        case BUBBLE_SORT:
+            bubbleSortComLog(p->vetor, inicio, fim, saida);
+            break;
+        case INSERTION_SORT:
+            insertionSortComLog(p->vetor, inicio, fim, saida);
+            break;
+        case MERGE_SORT:
+            mergeSortComLog(p->vetor, inicio, fim, saida);
+            break;
+        case QUICK_SORT:
             quickSortComLog(p->vetor, inicio, fim, saida);
             break;
     }
@@ -413,10 +465,11 @@ void ordenarSubconjunto(Particao* p, int elemento, MetodoOrdenacao metodo) {
         if (i < fim) fprintf(saida, ", ");
     }
     fprintf(saida, "]\n");
+    fprintf(saida, "Tempo médio de ordenação (média de %d execuções): %.9f segundos\n", 
+            NUM_EXECUCOES, tempo_medio);
 
+    free(vetorTeste);
     registrarOperacao(saida, "Ordenacao Concluida", detalhes);
-    
-    fflush(saida);
     fclose(saida);
 }
 
@@ -501,12 +554,10 @@ void insertionSortComLog(int A[], int inicio, int fim, FILE* saida) {
 void mergeSortComLog(int A[], int inicio, int fim, FILE* saida) {
     static int nivel = 0;
     static int comparacoes = 0, movimentacoes = 0;
-    static long long inicio_ord;
     
     if (nivel == 0) {
         fprintf(saida, "Iniciando Merge Sort com %d elementos\n\n", fim - inicio + 1);
         comparacoes = movimentacoes = 0;
-        inicio_ord = getMicrotime();
     }
 
     if (inicio < fim) {
@@ -526,40 +577,12 @@ void mergeSortComLog(int A[], int inicio, int fim, FILE* saida) {
         mergeSortComLog(A, meio + 1, fim, saida);
         nivel--;
 
-        // Log da combinação
-        for (int i = 0; i < nivel; i++) fprintf(saida, "  ");
-        fprintf(saida, "Combinando as partes ordenadas:\n");
-        fprintf(saida, "  Parte esquerda: [");
-        for (int i = inicio; i <= meio; i++) {
-            fprintf(saida, "%d", A[i]);
-            if (i < meio) fprintf(saida, ", ");
-        }
-        fprintf(saida, "]\n  Parte direita: [");
-        for (int i = meio + 1; i <= fim; i++) {
-            fprintf(saida, "%d", A[i]);
-            if (i < fim) fprintf(saida, ", ");
-        }
-        fprintf(saida, "]\n");
-
         mergeComLog(A, inicio, meio, fim, saida, &comparacoes, &movimentacoes);
 
-        // Log do resultado da combinação
-        for (int i = 0; i < nivel; i++) fprintf(saida, "  ");
-        fprintf(saida, "Resultado da combinacao: [");
-        for (int i = inicio; i <= fim; i++) {
-            fprintf(saida, "%d", A[i]);
-            if (i < fim) fprintf(saida, ", ");
-        }
-        fprintf(saida, "]\n\n");
-
         if (nivel == 0) {
-            long long fim_ord = getMicrotime();
-            double tempo_ord = (fim_ord - inicio_ord) / 1000.0; // Convertendo para milissegundos
-            
             fprintf(saida, "\nEstatísticas do Merge Sort:\n");
             fprintf(saida, "Total de comparações: %d\n", comparacoes);
-            fprintf(saida, "Total de movimentacoes: %d\n", movimentacoes);
-            fprintf(saida, "Tempo de ordenacao: %.3f milissegundos\n", tempo_ord);
+            fprintf(saida, "Total de movimentações: %d\n", movimentacoes);
         }
     }
 }
@@ -698,5 +721,103 @@ int particionarComLog(int A[], int inicio, int fim, FILE* saida,
     }
 
     return i + 1;
+}
+
+UnionFind* createUnionFind(int size) {
+    UnionFind* uf = (UnionFind*)malloc(sizeof(UnionFind));
+    uf->parent = (int*)malloc(size * sizeof(int));
+    uf->rank = (int*)malloc(size * sizeof(int));
+    uf->size = size;
+    for (int i = 0; i < size; i++) {
+        uf->parent[i] = i;
+        uf->rank[i] = 0;
+    }
+    return uf;
+}
+
+int find(UnionFind* uf, int x) {
+    if (uf->parent[x] != x) {
+        uf->parent[x] = find(uf, uf->parent[x]); // Path compression
+    }
+    return uf->parent[x];
+}
+
+void unionSets(UnionFind* uf, int x, int y) {
+    int rootX = find(uf, x);
+    int rootY = find(uf, y);
+    if (rootX != rootY) {
+        if (uf->rank[rootX] > uf->rank[rootY]) {
+            uf->parent[rootY] = rootX;
+        } else if (uf->rank[rootX] < uf->rank[rootY]) {
+            uf->parent[rootX] = rootY;
+        } else {
+            uf->parent[rootY] = rootX;
+            uf->rank[rootX]++;
+        }
+    }
+}
+
+void freeUnionFind(UnionFind* uf) {
+    free(uf->parent);
+    free(uf->rank);
+    free(uf);
+}
+
+void verificarAmbiguidade(Particao* p) {
+    FILE* saida = fopen("resultado.txt", "a");
+    if (!saida) return;
+
+    UnionFind* uf = createUnionFind(p->n);
+    bool ambiguidade_encontrada = false;
+
+    // Para cada subconjunto
+    for (int i = 0; i < p->k; i++) {
+        // Para cada elemento no subconjunto atual
+        for (int j = p->subconj[i].inicio; j < p->subconj[i].fim; j++) {
+            // Une o elemento atual com o próximo no mesmo subconjunto
+            int elem_atual = p->vetor[j] - 1;  // -1 porque os elementos começam em 1
+            int elem_prox = p->vetor[j + 1] - 1;
+            
+            // Se os elementos já estão em conjuntos diferentes
+            if (find(uf, elem_atual) != find(uf, elem_prox)) {
+                unionSets(uf, elem_atual, elem_prox);
+            }
+        }
+    }
+
+    // Verifica se há elementos que deveriam estar no mesmo conjunto
+    fprintf(saida, "\n=== Verificação de Ambiguidade ===\n");
+    
+    for (int i = 0; i < p->k; i++) {
+        for (int j = p->subconj[i].inicio; j <= p->subconj[i].fim; j++) {
+            for (int m = 0; m < p->k; m++) {
+                if (m == i) continue;
+                for (int n = p->subconj[m].inicio; n <= p->subconj[m].fim; n++) {
+                    int elem1 = p->vetor[j] - 1;
+                    int elem2 = p->vetor[n] - 1;
+                    if (find(uf, elem1) == find(uf, elem2) && 
+                        encontrarSubconjunto(p, elem1 + 1) != encontrarSubconjunto(p, elem2 + 1)) {
+                        if (!ambiguidade_encontrada) {
+                            fprintf(saida, "\nAmbiguidade detectada!\n");
+                            ambiguidade_encontrada = true;
+                        }
+                        fprintf(saida, "Os elementos %d e %d deveriam estar no mesmo subconjunto, "
+                                "mas estão em subconjuntos diferentes (%d e %d)\n",
+                                elem1 + 1, elem2 + 1, 
+                                encontrarSubconjunto(p, elem1 + 1) + 1,
+                                encontrarSubconjunto(p, elem2 + 1) + 1);
+                    }
+                }
+            }
+        }
+    }
+
+    if (!ambiguidade_encontrada) {
+        fprintf(saida, "Nenhuma ambiguidade encontrada na partição.\n");
+    }
+
+    fprintf(saida, "\n");
+    fclose(saida);
+    freeUnionFind(uf);
 }
 

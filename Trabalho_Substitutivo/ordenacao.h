@@ -19,6 +19,13 @@ typedef struct {
     int k;                // número de subconjuntos
 } Particao;
 
+// Estrutura UnionFind para verificação de ambiguidade
+typedef struct {
+    int* parent;
+    int* rank;
+    int size;
+} UnionFind;
+
 // Funções do bubblesort
 void bubbleSort(int A[], int inicio, int fim);
 void insertionSort(int A[], int inicio, int fim);
@@ -77,5 +84,12 @@ int particionar(int A[], int inicio, int fim);
 void imprimirSubconjunto(int A[], int inicio, int fim);
 void definirRepresentante(Particao* p, int subconjunto);
 void unirSubconjuntos(Particao* p, int elemento1, int elemento2);
+
+// Funções para UnionFind
+UnionFind* createUnionFind(int size);
+int find(UnionFind* uf, int x);
+void unionSets(UnionFind* uf, int x, int y);
+void freeUnionFind(UnionFind* uf);
+void verificarAmbiguidade(Particao* p);
 
 #endif
