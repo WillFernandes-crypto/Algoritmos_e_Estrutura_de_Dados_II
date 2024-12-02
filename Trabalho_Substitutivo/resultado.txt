@@ -1,6 +1,52 @@
-﻿=== Resultado da Execução ===
+﻿====== Log de Operações ======
+====== Log de Operações ======
 
-Tempo total de execução: 16,469000 segundos
+
+
+====== Resultado Final ======
+Tempo total de execução: 13.570000 segundos
+Tamanho do vetor (n): 5
+Número de subconjuntos (k): 2
+
+Estado final do vetor:
+[1, 2, 3, 4, 5]
+
+Estado final dos subconjuntos:
+Subconjunto 1: [1, 2, 3] (início: 0, fim: 2)
+Subconjunto 2: [4, 5] (início: 3, fim: 4)
+
+=== Ordenação ===
+Timestamp: 6.708000 segundos
+Iniciando ordenação do subconjunto contendo elemento 3
+
+=== Ordenação Concluída ===
+Timestamp: 6.708000 segundos
+Ordenação concluída em 0.000000 segundos
+Estado inicial do subconjunto: [1, 2, 3]
+
+Usando Insertion Sort:
+Iniciando Insertion Sort com 3 elementos
+
+Inserindo elemento A[1] = 2:
+  Comparando com elementos anteriores:
+  Elemento já está na posição correta
+  Estado atual: [1, 2, 3]
+
+Inserindo elemento A[2] = 3:
+  Comparando com elementos anteriores:
+  Elemento já está na posição correta
+  Estado atual: [1, 2, 3]
+
+Estatísticas do Insertion Sort:
+Total de comparações: 0
+Total de movimentações: 0
+
+Estado final do subconjunto: [1, 2, 3]
+Tempo de ordenação: 0.000000 segundos
+
+
+====== Resultado Final ======
+Tempo total de execução: 7.960000 segundos
 Tamanho do vetor (n): 5
 Número de subconjuntos (k): 2
 

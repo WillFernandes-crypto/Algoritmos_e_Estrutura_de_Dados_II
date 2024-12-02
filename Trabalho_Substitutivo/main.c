@@ -1,7 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <time.h>
 #include "ordenacao.h"
+
+clock_t inicio_global;
 
 void mostrarMenu() {
     printf("\nMenu de Operacoes:\n");
@@ -22,10 +25,42 @@ void menuOrdenacao() {
     printf("Escolha um metodo: ");
 }
 
+void registrarOperacao(FILE* saida, const char* operacao, const char* detalhes) {
+    FILE* arquivo = fopen("resultado.txt", "a");
+    if (!arquivo) return;
+
+    fprintf(arquivo, "\n=== %s ===\n", operacao);
+    fprintf(arquivo, "Timestamp: %.6f segundos\n", 
+            (double)(clock() - inicio_global) / CLOCKS_PER_SEC);
+    fprintf(arquivo, "%s\n", detalhes);
+
+    fclose(arquivo);
+}
+
 void salvarResultado(Particao* p, double tempo_total) {
+    // Primeiro, vamos ler o conteúdo existente do arquivo
+    FILE* entrada = fopen("resultado.txt", "rb");
+    char* log_anterior = NULL;
+    long tamanho = 0;
+    
+    if (entrada) {
+        // Obtém o tamanho do arquivo
+        fseek(entrada, 0, SEEK_END);
+        tamanho = ftell(entrada);
+        rewind(entrada);
+        
+        // Aloca memória e lê o conteúdo existente
+        log_anterior = (char*)malloc(tamanho + 1);
+        fread(log_anterior, 1, tamanho, entrada);
+        log_anterior[tamanho] = '\0';
+        fclose(entrada);
+    }
+
+    // Agora abre o arquivo para escrita
     FILE* saida = fopen("resultado.txt", "wb");
     if (!saida) {
         printf("Erro ao criar arquivo de saída!\n");
+        free(log_anterior);
         return;
     }
 
@@ -33,8 +68,16 @@ void salvarResultado(Particao* p, double tempo_total) {
     unsigned char bom[] = {0xEF, 0xBB, 0xBF};
     fwrite(bom, sizeof(unsigned char), 3, saida);
 
-    // Cabeçalho com informações gerais
-    fprintf(saida, "=== Resultado da Execução ===\n\n");
+    // Escreve o cabeçalho do log
+    fprintf(saida, "====== Log de Operações ======\n");
+    
+    // Se existia conteúdo anterior, escreve ele
+    if (log_anterior && tamanho > 0) {
+        fprintf(saida, "%s", log_anterior);
+    }
+    
+    // Escreve o resultado final
+    fprintf(saida, "\n\n====== Resultado Final ======\n");
     fprintf(saida, "Tempo total de execução: %.6f segundos\n", tempo_total);
     fprintf(saida, "Tamanho do vetor (n): %d\n", p->n);
     fprintf(saida, "Número de subconjuntos (k): %d\n\n", p->k);
@@ -60,12 +103,12 @@ void salvarResultado(Particao* p, double tempo_total) {
     }
 
     fclose(saida);
+    free(log_anterior);
     printf("\nResultado salvo em 'resultado.txt'\n");
 }
 
 int main() {
-
-    clock_t inicio = clock();  // Inicia contagem do tempo
+    inicio_global = clock();
 
     Particao* p = lerParticaoDeArquivo("dados.csv");
     if (!p) {
@@ -116,7 +159,7 @@ int main() {
 
     // Calcula o tempo total
     clock_t fim = clock();
-    double tempo_total = (double)(fim - inicio) / CLOCKS_PER_SEC;
+    double tempo_total = (double)(fim - inicio_global) / CLOCKS_PER_SEC;
 
     // Imprime e salva os resultados
     printf("\nTempo total de execução: %.6f segundos\n", tempo_total);

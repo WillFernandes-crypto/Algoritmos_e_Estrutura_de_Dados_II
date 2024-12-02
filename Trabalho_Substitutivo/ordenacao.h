@@ -1,6 +1,9 @@
 #ifndef ALGORITMOS_DE_ORDENACAO_H
 #define ALGORITMOS_DE_ORDENACAO_H
 
+#include <stdio.h>
+#include <stdbool.h>
+
 // Estrutura para representar um subconjunto
 typedef struct {
     int inicio;
@@ -48,5 +51,14 @@ typedef enum {
 
 // Função genérica para ordenar usando o método escolhido
 void ordenarSubconjunto(Particao* p, int elemento, MetodoOrdenacao metodo);
+
+// Funções de log
+void registrarOperacao(FILE* saida, const char* operacao, const char* detalhes);
+
+// Funções de ordenação com log
+void bubbleSortComLog(int A[], int inicio, int fim, FILE* saida);
+void insertionSortComLog(int A[], int inicio, int fim, FILE* saida);
+void mergeSortComLog(int A[], int inicio, int fim, FILE* saida);
+void quickSortComLog(int A[], int inicio, int fim, FILE* saida);
 
 #endif
