@@ -4,6 +4,8 @@
 #include <time.h>
 #include "ordenacao.h"
 
+extern FILE* arquivo_log;
+
 void bubbleSort(int A[], int inicio, int fim) {
     int comprimento = fim - inicio + 1;
 
@@ -335,6 +337,7 @@ void reorganizarSubconjuntos(Particao* p, int subconj1, int subconj2) {
 }
 
 void ordenarSubconjunto(Particao* p, int elemento, MetodoOrdenacao metodo) {
+    // Abre o arquivo em modo append binário para preservar o conteúdo existente
     FILE* saida = fopen("resultado.txt", "ab");
     if (!saida) return;
 
@@ -363,7 +366,7 @@ void ordenarSubconjunto(Particao* p, int elemento, MetodoOrdenacao metodo) {
     }
     fprintf(saida, "]\n\n");
 
-    // Executa e registra a ordenação
+    // Executa a ordenação com log detalhado
     switch (metodo) {
         case BUBBLE_SORT:
             fprintf(saida, "Usando Bubble Sort:\n");
@@ -383,135 +386,162 @@ void ordenarSubconjunto(Particao* p, int elemento, MetodoOrdenacao metodo) {
             break;
     }
 
-    // Log do resultado e tempo
-    double tempo_ord = (double)(clock() - inicio_ord) / CLOCKS_PER_SEC;
+    // Log do resultado
     fprintf(saida, "\nEstado final do subconjunto: [");
     for (int i = inicio; i <= fim; i++) {
         fprintf(saida, "%d", p->vetor[i]);
         if (i < fim) fprintf(saida, ", ");
     }
     fprintf(saida, "]\n");
+
+    double tempo_ord = (double)(clock() - inicio_ord) / CLOCKS_PER_SEC;
     fprintf(saida, "Tempo de ordenação: %.6f segundos\n", tempo_ord);
 
     sprintf(detalhes, "Ordenação concluída em %.6f segundos", tempo_ord);
     registrarOperacao(saida, "Ordenação Concluída", detalhes);
+    
+    fflush(saida); // Força a escrita no arquivo
     fclose(saida);
 }
 
 void bubbleSortComLog(int A[], int inicio, int fim, FILE* saida) {
     int comprimento = fim - inicio + 1;
-    int trocas = 0, comparacoes = 0;
+    int comparacoes = 0, movimentacoes = 0;
 
-    fprintf(saida, "Iniciando Bubble Sort com %d elementos\n", comprimento);
+    fprintf(saida, "Iniciando Bubble Sort com %d elementos\n\n", comprimento);
 
     for (int i = 0; i < comprimento - 1; i++) {
-        fprintf(saida, "\nPassagem %d:\n", i + 1);
+        fprintf(saida, "Passagem %d:\n", i + 1);
         bool trocou = false;
-
+        
         for (int j = inicio; j < inicio + comprimento - i - 1; j++) {
+            fprintf(saida, "  Comparando A[%d]=%d com A[%d]=%d: ", j, A[j], j+1, A[j+1]);
             comparacoes++;
-            fprintf(saida, "  Comparando %d com %d: ", A[j], A[j + 1]);
-
+            
             if (A[j] > A[j + 1]) {
-                fprintf(saida, "troca realizada\n");
+                fprintf(saida, "troca\n");
                 int temp = A[j];
                 A[j] = A[j + 1];
                 A[j + 1] = temp;
-                trocas++;
+                movimentacoes += 3;
                 trocou = true;
             } else {
-                fprintf(saida, "mantém posição\n");
+                fprintf(saida, "mantém\n");
             }
         }
-
+        
+        fprintf(saida, "Estado após passagem %d: [", i + 1);
+        for (int k = inicio; k <= fim; k++) {
+            fprintf(saida, "%d", A[k]);
+            if (k < fim) fprintf(saida, ", ");
+        }
+        fprintf(saida, "]\n\n");
+        
         if (!trocou) {
-            fprintf(saida, "Nenhuma troca nesta passagem - array já ordenado\n");
+            fprintf(saida, "Array já ordenado, parando Bubble Sort\n");
             break;
         }
     }
 
     fprintf(saida, "\nEstatísticas do Bubble Sort:\n");
     fprintf(saida, "Total de comparações: %d\n", comparacoes);
-    fprintf(saida, "Total de trocas: %d\n", trocas);
+    fprintf(saida, "Total de movimentações: %d\n", movimentacoes);
 }
 
 void insertionSortComLog(int A[], int inicio, int fim, FILE* saida) {
+    int comprimento = fim - inicio + 1;
     int comparacoes = 0, movimentacoes = 0;
-    fprintf(saida, "Iniciando Insertion Sort com %d elementos\n", fim - inicio + 1);
+
+    fprintf(saida, "Iniciando Insertion Sort com %d elementos\n\n", comprimento);
 
     for (int i = inicio + 1; i <= fim; i++) {
-        fprintf(saida, "\nInserindo elemento A[%d] = %d:\n", i, A[i]);
         int chave = A[i];
         int j = i - 1;
-
+        
+        fprintf(saida, "Inserindo elemento A[%d] = %d:\n", i, chave);
         fprintf(saida, "  Comparando com elementos anteriores:\n");
+        
+        bool moveu = false;
         while (j >= inicio && A[j] > chave) {
-            comparacoes++;
-            fprintf(saida, "    A[%d] = %d > %d: movendo para direita\n", 
-                    j, A[j], chave);
+            fprintf(saida, "    A[%d]=%d > %d: move para direita\n", j, A[j], chave);
             A[j + 1] = A[j];
-            movimentacoes++;
             j--;
-        }
-        if (j + 1 != i) {
-            fprintf(saida, "  Inserindo %d na posição %d\n", chave, j + 1);
-            A[j + 1] = chave;
+            comparacoes++;
             movimentacoes++;
-        } else {
+            moveu = true;
+        }
+        
+        if (!moveu) {
             fprintf(saida, "  Elemento já está na posição correta\n");
         }
-
+        
+        A[j + 1] = chave;
+        if (moveu) movimentacoes++;
+        
         fprintf(saida, "  Estado atual: [");
         for (int k = inicio; k <= fim; k++) {
             fprintf(saida, "%d", A[k]);
             if (k < fim) fprintf(saida, ", ");
         }
-        fprintf(saida, "]\n");
+        fprintf(saida, "]\n\n");
     }
 
-    fprintf(saida, "\nEstatísticas do Insertion Sort:\n");
+    fprintf(saida, "Estatísticas do Insertion Sort:\n");
     fprintf(saida, "Total de comparações: %d\n", comparacoes);
     fprintf(saida, "Total de movimentações: %d\n", movimentacoes);
 }
 
 void mergeSortComLog(int A[], int inicio, int fim, FILE* saida) {
-    static int nivel = 0;  // para controlar a indentação
+    static int nivel = 0;
     static int comparacoes = 0, movimentacoes = 0;
     
     if (nivel == 0) {
-        fprintf(saida, "Iniciando Merge Sort com %d elementos\n", fim - inicio + 1);
+        fprintf(saida, "Iniciando Merge Sort com %d elementos\n\n", fim - inicio + 1);
         comparacoes = movimentacoes = 0;
     }
 
     if (inicio < fim) {
         int meio = inicio + (fim - inicio) / 2;
         
-        // Indentação para visualizar a recursão
+        // Log da divisão atual
         for (int i = 0; i < nivel; i++) fprintf(saida, "  ");
-        fprintf(saida, "Dividindo array [%d...%d] em [%d...%d] e [%d...%d]\n",
-                inicio, fim, inicio, meio, meio + 1, fim);
+        fprintf(saida, "Dividindo array [");
+        for (int i = inicio; i <= fim; i++) {
+            fprintf(saida, "%d", A[i]);
+            if (i < fim) fprintf(saida, ", ");
+        }
+        fprintf(saida, "] em duas partes\n");
         
         nivel++;
         mergeSortComLog(A, inicio, meio, saida);
         mergeSortComLog(A, meio + 1, fim, saida);
         nivel--;
 
-        // Log antes do merge
+        // Log da combinação
         for (int i = 0; i < nivel; i++) fprintf(saida, "  ");
-        fprintf(saida, "Combinando subarrays: [");
+        fprintf(saida, "Combinando as partes ordenadas:\n");
+        fprintf(saida, "  Parte esquerda: [");
         for (int i = inicio; i <= meio; i++) {
             fprintf(saida, "%d", A[i]);
             if (i < meio) fprintf(saida, ", ");
         }
-        fprintf(saida, "] e [");
+        fprintf(saida, "]\n  Parte direita: [");
         for (int i = meio + 1; i <= fim; i++) {
             fprintf(saida, "%d", A[i]);
             if (i < fim) fprintf(saida, ", ");
         }
         fprintf(saida, "]\n");
 
-        // Realiza o merge com log
         mergeComLog(A, inicio, meio, fim, saida, &comparacoes, &movimentacoes);
+
+        // Log do resultado da combinação
+        for (int i = 0; i < nivel; i++) fprintf(saida, "  ");
+        fprintf(saida, "Resultado da combinação: [");
+        for (int i = inicio; i <= fim; i++) {
+            fprintf(saida, "%d", A[i]);
+            if (i < fim) fprintf(saida, ", ");
+        }
+        fprintf(saida, "]\n\n");
 
         if (nivel == 0) {
             fprintf(saida, "\nEstatísticas do Merge Sort:\n");
@@ -528,6 +558,7 @@ void mergeComLog(int A[], int inicio, int meio, int fim, FILE* saida,
     int* L = (int*)malloc(n1 * sizeof(int));
     int* R = (int*)malloc(n2 * sizeof(int));
 
+    // Copia os elementos para os arrays temporários
     for (int i = 0; i < n1; i++) {
         L[i] = A[inicio + i];
         (*movimentacoes)++;
@@ -538,16 +569,18 @@ void mergeComLog(int A[], int inicio, int meio, int fim, FILE* saida,
     }
 
     int i = 0, j = 0, k = inicio;
+    
+    // Combina os arrays ordenados
     while (i < n1 && j < n2) {
         (*comparacoes)++;
+        fprintf(saida, "    Comparando %d com %d: ", L[i], R[j]);
+        
         if (L[i] <= R[j]) {
-            fprintf(saida, "    Comparando L[%d]=%d ≤ R[%d]=%d: escolhe da esquerda\n",
-                    i, L[i], j, R[j]);
+            fprintf(saida, "escolhe %d da esquerda\n", L[i]);
             A[k] = L[i];
             i++;
         } else {
-            fprintf(saida, "    Comparando L[%d]=%d > R[%d]=%d: escolhe da direita\n",
-                    i, L[i], j, R[j]);
+            fprintf(saida, "escolhe %d da direita\n", R[j]);
             A[k] = R[j];
             j++;
         }
@@ -555,6 +588,7 @@ void mergeComLog(int A[], int inicio, int meio, int fim, FILE* saida,
         k++;
     }
 
+    // Copia os elementos restantes
     while (i < n1) {
         fprintf(saida, "    Copiando elemento restante da esquerda: %d\n", L[i]);
         A[k] = L[i];
@@ -576,11 +610,11 @@ void mergeComLog(int A[], int inicio, int meio, int fim, FILE* saida,
 }
 
 void quickSortComLog(int A[], int inicio, int fim, FILE* saida) {
-    static int nivel = 0;  // para controlar a indentação
+    static int nivel = 0;
     static int comparacoes = 0, movimentacoes = 0;
     
     if (nivel == 0) {
-        fprintf(saida, "Iniciando Quick Sort com %d elementos\n", fim - inicio + 1);
+        fprintf(saida, "Iniciando Quick Sort com %d elementos\n\n", fim - inicio + 1);
         comparacoes = movimentacoes = 0;
     }
 
@@ -646,3 +680,4 @@ int particionarComLog(int A[], int inicio, int fim, FILE* saida,
 
     return i + 1;
 }
+
