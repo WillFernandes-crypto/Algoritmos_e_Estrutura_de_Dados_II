@@ -1,7 +1,7 @@
-﻿====== Log de Operações ======
-==
+====== Log de Operações ======
 
-000 segundos
+
+=== Ordenação (11.337 segundos) ===
 Iniciando ordenação do subconjunto contendo elemento 3
 Estado inicial do subconjunto: [1, 2, 3]
 
@@ -33,12 +33,11 @@ Total de movimentações: 10
 Estado final do subconjunto: [1, 2, 3]
 Tempo de ordenação: 0.000000 segundos
 
-=== Ordenação Concluída ===
-Timestamp: 7.175000 segundos
+=== Ordenação Concluída (11.337 segundos) ===
 Ordenação concluída em 0.000000 segundos
 
 ====== Resultado Final ======
-Tempo total de execução: 8.360000 segundos
+Tempo total de execução: 12.817000 segundos
 Tamanho do vetor (n): 5
 Número de subconjuntos (k): 2
 

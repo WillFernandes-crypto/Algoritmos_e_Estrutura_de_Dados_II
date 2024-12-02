@@ -61,4 +61,21 @@ void insertionSortComLog(int A[], int inicio, int fim, FILE* saida);
 void mergeSortComLog(int A[], int inicio, int fim, FILE* saida);
 void quickSortComLog(int A[], int inicio, int fim, FILE* saida);
 
+// Funções auxiliares para ordenação com log
+void mergeComLog(int A[], int inicio, int meio, int fim, FILE* saida, 
+                 int* comparacoes, int* movimentacoes);
+int particionarComLog(int A[], int inicio, int fim, FILE* saida, 
+                     int* comparacoes, int* movimentacoes);
+
+// Funções auxiliares recursivas
+void mergeSortRecursivo(int A[], int inicio, int fim);
+void quickSortRecursivo(int A[], int inicio, int fim);
+
+// Funções auxiliares básicas
+void merge(int A[], int inicio, int meio, int fim);
+int particionar(int A[], int inicio, int fim);
+void imprimirSubconjunto(int A[], int inicio, int fim);
+void definirRepresentante(Particao* p, int subconjunto);
+void unirSubconjuntos(Particao* p, int elemento1, int elemento2);
+
 #endif

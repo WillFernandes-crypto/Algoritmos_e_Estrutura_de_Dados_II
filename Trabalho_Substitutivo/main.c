@@ -8,14 +8,12 @@ clock_t inicio_global;
 FILE* arquivo_log = NULL;
 
 void abrirArquivoLog() {
-    if (!arquivo_log) {
-        arquivo_log = fopen("resultado.txt", "wb");
-        if (arquivo_log) {
-            // Adiciona BOM UTF-8
-            unsigned char bom[] = {0xEF, 0xBB, 0xBF};
-            fwrite(bom, sizeof(unsigned char), 3, arquivo_log);
-            fprintf(arquivo_log, "====== Log de Operações ======\n\n");
-        }
+    // Abre o arquivo em modo write para começar um novo log
+    arquivo_log = fopen("resultado.txt", "w");
+    if (arquivo_log) {
+        fprintf(arquivo_log, "====== Log de Operações ======\n\n");
+        fclose(arquivo_log);
+        arquivo_log = NULL;
     }
 }
 
@@ -41,54 +39,21 @@ void menuOrdenacao() {
 void registrarOperacao(FILE* saida, const char* operacao, const char* detalhes) {
     if (!saida) return;
 
-    fprintf(saida, "\n=== %s ===\n", operacao);
-    fprintf(saida, "Timestamp: %.6f segundos\n", 
-            (double)(clock() - inicio_global) / CLOCKS_PER_SEC);
+    // Adiciona uma linha em branco antes de cada operação para melhor legibilidade
+    fprintf(saida, "\n");
+    
+    // Cabeçalho da operação com timestamp
+    fprintf(saida, "=== %s (%.3f segundos) ===\n", 
+            operacao, (double)(clock() - inicio_global) / CLOCKS_PER_SEC);
+    
+    // Detalhes da operação
     fprintf(saida, "%s\n", detalhes);
-    fflush(saida);  // Força a escrita no arquivo
 }
 
 void salvarResultado(Particao* p, double tempo_total) {
-    // Primeiro, vamos ler o conteúdo existente do arquivo
-    FILE* entrada = fopen("resultado.txt", "rb");
-    char* log_anterior = NULL;
-    long tamanho = 0;
-    
-    if (entrada) {
-        fseek(entrada, 0, SEEK_END);
-        tamanho = ftell(entrada);
-        rewind(entrada);
-        
-        log_anterior = (char*)malloc(tamanho + 1);
-        if (log_anterior) {
-            fread(log_anterior, 1, tamanho, entrada);
-            log_anterior[tamanho] = '\0';
-        }
-        fclose(entrada);
-    }
-
-    // Abre o arquivo para escrita
-    FILE* saida = fopen("resultado.txt", "wb");
-    if (!saida) {
-        free(log_anterior);
-        return;
-    }
-
-    // Adiciona BOM UTF-8
-    unsigned char bom[] = {0xEF, 0xBB, 0xBF};
-    fwrite(bom, sizeof(unsigned char), 3, saida);
-
-    // Escreve o cabeçalho do log
-    fprintf(saida, "====== Log de Operações ======\n");
-    
-    // Preserva os logs anteriores
-    if (log_anterior && tamanho > 0) {
-        char* inicio_resultado = strstr(log_anterior, "====== Resultado Final ======");
-        if (inicio_resultado) {
-            *inicio_resultado = '\0';
-        }
-        fprintf(saida, "%s", log_anterior + strlen("====== Log de Operações ======\n"));
-    }
+    // Abre o arquivo em modo append
+    FILE* saida = fopen("resultado.txt", "a");
+    if (!saida) return;
 
     // Escreve o resultado final
     fprintf(saida, "\n====== Resultado Final ======\n");
@@ -114,9 +79,7 @@ void salvarResultado(Particao* p, double tempo_total) {
                 p->subconj[i].inicio, p->subconj[i].fim);
     }
 
-    fflush(saida);
     fclose(saida);
-    free(log_anterior);
 }
 
 int main() {
