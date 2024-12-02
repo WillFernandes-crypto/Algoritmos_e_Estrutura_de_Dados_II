@@ -770,49 +770,101 @@ void verificarAmbiguidade(Particao* p) {
     UnionFind* uf = createUnionFind(p->n);
     bool ambiguidade_encontrada = false;
 
-    // Para cada subconjunto
+    // Primeiro passo: construir os conjuntos
     for (int i = 0; i < p->k; i++) {
-        // Para cada elemento no subconjunto atual
         for (int j = p->subconj[i].inicio; j < p->subconj[i].fim; j++) {
-            // Une o elemento atual com o próximo no mesmo subconjunto
-            int elem_atual = p->vetor[j] - 1;  // -1 porque os elementos começam em 1
+            int elem_atual = p->vetor[j] - 1;
             int elem_prox = p->vetor[j + 1] - 1;
-            
-            // Se os elementos já estão em conjuntos diferentes
             if (find(uf, elem_atual) != find(uf, elem_prox)) {
                 unionSets(uf, elem_atual, elem_prox);
             }
         }
     }
 
-    // Verifica se há elementos que deveriam estar no mesmo conjunto
+    // Estrutura para armazenar as ambiguidades de forma organizada
+    typedef struct {
+        int conjunto;      // número do conjunto
+        int elementos[50]; // elementos no conjunto
+        int num_elem;      // número de elementos
+        int subconjs[10]; // subconjuntos onde os elementos estão
+        int num_subconjs; // número de subconjuntos diferentes
+    } ConjuntoAmbiguo;
+
+    ConjuntoAmbiguo conjuntos[50];
+    int num_conjuntos = 0;
+
+    // Verifica e organiza as ambiguidades
     fprintf(saida, "\n=== Verificação de Ambiguidade ===\n");
     
-    for (int i = 0; i < p->k; i++) {
-        for (int j = p->subconj[i].inicio; j <= p->subconj[i].fim; j++) {
-            for (int m = 0; m < p->k; m++) {
-                if (m == i) continue;
-                for (int n = p->subconj[m].inicio; n <= p->subconj[m].fim; n++) {
-                    int elem1 = p->vetor[j] - 1;
-                    int elem2 = p->vetor[n] - 1;
-                    if (find(uf, elem1) == find(uf, elem2) && 
-                        encontrarSubconjunto(p, elem1 + 1) != encontrarSubconjunto(p, elem2 + 1)) {
-                        if (!ambiguidade_encontrada) {
-                            fprintf(saida, "\nAmbiguidade detectada!\n");
-                            ambiguidade_encontrada = true;
-                        }
-                        fprintf(saida, "Os elementos %d e %d deveriam estar no mesmo subconjunto, "
-                                "mas estão em subconjuntos diferentes (%d e %d)\n",
-                                elem1 + 1, elem2 + 1, 
-                                encontrarSubconjunto(p, elem1 + 1) + 1,
-                                encontrarSubconjunto(p, elem2 + 1) + 1);
+    for (int i = 0; i < p->n; i++) {
+        int raiz = find(uf, i);
+        bool encontrou_conjunto = false;
+        
+        // Procura se já existe um conjunto com esta raiz
+        for (int j = 0; j < num_conjuntos; j++) {
+            if (conjuntos[j].conjunto == raiz) {
+                encontrou_conjunto = true;
+                // Adiciona o elemento se ainda não estiver no conjunto
+                bool elem_existe = false;
+                for (int k = 0; k < conjuntos[j].num_elem; k++) {
+                    if (conjuntos[j].elementos[k] == i + 1) {
+                        elem_existe = true;
+                        break;
                     }
                 }
+                if (!elem_existe) {
+                    conjuntos[j].elementos[conjuntos[j].num_elem++] = i + 1;
+                }
+                
+                // Adiciona o subconjunto se for novo
+                int subconj = encontrarSubconjunto(p, i + 1) + 1;
+                bool subconj_existe = false;
+                for (int k = 0; k < conjuntos[j].num_subconjs; k++) {
+                    if (conjuntos[j].subconjs[k] == subconj) {
+                        subconj_existe = true;
+                        break;
+                    }
+                }
+                if (!subconj_existe) {
+                    conjuntos[j].subconjs[conjuntos[j].num_subconjs++] = subconj;
+                    ambiguidade_encontrada = true;
+                }
+                break;
             }
+        }
+        
+        // Se não encontrou, cria um novo conjunto
+        if (!encontrou_conjunto) {
+            conjuntos[num_conjuntos].conjunto = raiz;
+            conjuntos[num_conjuntos].elementos[0] = i + 1;
+            conjuntos[num_conjuntos].num_elem = 1;
+            conjuntos[num_conjuntos].subconjs[0] = encontrarSubconjunto(p, i + 1) + 1;
+            conjuntos[num_conjuntos].num_subconjs = 1;
+            num_conjuntos++;
         }
     }
 
-    if (!ambiguidade_encontrada) {
+    // Imprime as ambiguidades de forma organizada
+    if (ambiguidade_encontrada) {
+        fprintf(saida, "\nAmbiguidade detectada!\n");
+        for (int i = 0; i < num_conjuntos; i++) {
+            if (conjuntos[i].num_subconjs > 1) {
+                fprintf(saida, "\nConjunto %d:\n", i + 1);
+                fprintf(saida, "  Elementos: {");
+                for (int j = 0; j < conjuntos[i].num_elem; j++) {
+                    fprintf(saida, "%d", conjuntos[i].elementos[j]);
+                    if (j < conjuntos[i].num_elem - 1) fprintf(saida, ", ");
+                }
+                fprintf(saida, "}\n");
+                fprintf(saida, "  Distribuídos nos subconjuntos: {");
+                for (int j = 0; j < conjuntos[i].num_subconjs; j++) {
+                    fprintf(saida, "%d", conjuntos[i].subconjs[j]);
+                    if (j < conjuntos[i].num_subconjs - 1) fprintf(saida, ", ");
+                }
+                fprintf(saida, "}\n");
+            }
+        }
+    } else {
         fprintf(saida, "Nenhuma ambiguidade encontrada na partição.\n");
     }
 
