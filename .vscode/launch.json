@@ -8,8 +8,8 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": true,
-      "cwd": "c:/Users/wilso/Documents/Estudos/AED 2/ProjetoAED2",
-      "program": "c:/Users/wilso/Documents/Estudos/AED 2/ProjetoAED2/build/Debug/outDebug",
+      "cwd": "c:/Users/wilso/Documents/Estudos/AED 2/Algoritmos_e_Estrutura_de_Dados_II",
+      "program": "c:/Users/wilso/Documents/Estudos/AED 2/Algoritmos_e_Estrutura_de_Dados_II/build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [
