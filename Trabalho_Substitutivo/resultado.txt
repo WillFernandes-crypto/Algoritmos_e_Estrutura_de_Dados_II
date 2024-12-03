@@ -20,7 +20,7 @@ Nesta partição exemplo, cada elemento pertence a exatamente um subconjunto,
 não havendo sobreposição entre os subconjuntos.
 
 
-=== Ordenacao (5.347 segundos) ===
+=== Ordenacao (2.523 segundos) ===
 Iniciando ordenacao do subconjunto contendo elemento 3
 Estado inicial do subconjunto: [1, 2, 3, 4]
 
@@ -44,13 +44,13 @@ Total de comparações: 4
 Total de movimentações: 16
 
 Estado final do subconjunto: [1, 2, 3, 4]
-Tempo médio de ordenação (média de 1000 execuções): 0.000000785 segundos
+Tempo médio de ordenação (média de 1000 execuções): 0.000000681 segundos
 
-=== Ordenacao Concluida (5.348 segundos) ===
+=== Ordenacao Concluida (2.523 segundos) ===
 Iniciando ordenacao do subconjunto contendo elemento 3
 
 ====== Resultado Final ======
-Tempo total de execução: 7.195000 segundos
+Tempo total de execução: 4.702000 segundos
 Tamanho do vetor (n): 14
 Número de subconjuntos (k): 6
 
