@@ -54,60 +54,6 @@ void insertionSort(int A[], int inicio, int fim) {
     }
 }
 
-void merge(int A[], int inicio, int meio, int fim) {
-    int n1 = meio - inicio + 1;
-    int n2 = fim - meio;
-
-    int* L = (int*)malloc(n1 * sizeof(int));
-    int* R = (int*)malloc(n2 * sizeof(int));
-
-    for (int i = 0; i < n1; i++)
-        L[i] = A[inicio + i];
-    for (int j = 0; j < n2; j++)
-        R[j] = A[meio + 1 + j];
-
-    int i = 0, j = 0, k = inicio;
-
-    while (i < n1 && j < n2) {
-        if (L[i] <= R[j]) {
-            A[k] = L[i];
-            i++;
-        } else {
-            A[k] = R[j];
-            j++;
-        }
-        k++;
-    }
-
-    while (i < n1) {
-        A[k] = L[i];
-        i++;
-        k++;
-    }
-
-    while (j < n2) {
-        A[k] = R[j];
-        j++;
-        k++;
-    }
-
-    free(L);
-    free(R);
-}
-
-void mergeSortRecursivo(int A[], int inicio, int fim) {
-    if (inicio < fim) {
-        int meio = inicio + (fim - inicio) / 2;
-        mergeSortRecursivo(A, inicio, meio);
-        mergeSortRecursivo(A, meio + 1, fim);
-        merge(A, inicio, meio, fim);
-    }
-}
-
-void mergeSort(int A[], int inicio, int fim) {
-    mergeSortRecursivo(A, inicio, fim);
-}
-
 int particionar(int A[], int inicio, int fim) {
     int pivo = A[fim];
     int i = inicio - 1;
@@ -423,7 +369,7 @@ void ordenarSubconjunto(Particao* p, int elemento, MetodoOrdenacao metodo) {
                 memcpy(vetorTeste, &p->vetor[inicio], tamanho * sizeof(int));
                 
                 long long tempo_inicio = getMicrotime();
-                mergeSort(vetorTeste, 0, tamanho - 1);
+                mergeSortComLog(vetorTeste, 0, tamanho - 1, saida);
                 tempo_total += (getMicrotime() - tempo_inicio) / 1000000.0;
             }
             break;
