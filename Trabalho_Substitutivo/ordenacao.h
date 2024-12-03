@@ -29,7 +29,7 @@ typedef struct {
 // Funções do bubblesort
 void bubbleSort(int A[], int inicio, int fim);
 void insertionSort(int A[], int inicio, int fim);
-void quickSort(int A[], int inicio, int fim);
+void quickSortComLog(int A[], int inicio, int fim, FILE* saida);
 void imprimirSubconjunto(int A[], int inicio, int fim);
 
 // Funções para manipulação do arquivo e partição
@@ -72,9 +72,6 @@ void mergeComLog(int A[], int inicio, int meio, int fim, FILE* saida,
                  int* comparacoes, int* movimentacoes);
 int particionarComLog(int A[], int inicio, int fim, FILE* saida, 
                      int* comparacoes, int* movimentacoes);
-
-// Funções auxiliares recursivas
-void quickSortRecursivo(int A[], int inicio, int fim);
 
 // Funções auxiliares básicas
 void definirRepresentante(Particao* p, int subconjunto);

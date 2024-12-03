@@ -54,36 +54,191 @@ void insertionSort(int A[], int inicio, int fim) {
     }
 }
 
-int particionar(int A[], int inicio, int fim) {
+
+void mergeSortComLog(int A[], int inicio, int fim, FILE* saida) {
+    static int nivel = 0;
+    static int comparacoes = 0, movimentacoes = 0;
+    
+    if (nivel == 0) {
+        fprintf(saida, "Iniciando Merge Sort com %d elementos\n\n", fim - inicio + 1);
+        comparacoes = movimentacoes = 0;
+    }
+
+    if (inicio < fim) {
+        int meio = inicio + (fim - inicio) / 2;
+        
+        // Log da divisão atual
+        for (int i = 0; i < nivel; i++) fprintf(saida, "  ");
+        fprintf(saida, "Dividindo array [");
+        for (int i = inicio; i <= fim; i++) {
+            fprintf(saida, "%d", A[i]);
+            if (i < fim) fprintf(saida, ", ");
+        }
+        fprintf(saida, "] em duas partes\n");
+        
+        nivel++;
+        mergeSortComLog(A, inicio, meio, saida);
+        mergeSortComLog(A, meio + 1, fim, saida);
+        nivel--;
+
+        mergeComLog(A, inicio, meio, fim, saida, &comparacoes, &movimentacoes);
+
+        if (nivel == 0) {
+            fprintf(saida, "\nEstatísticas do Merge Sort:\n");
+            fprintf(saida, "Total de comparações: %d\n", comparacoes);
+            fprintf(saida, "Total de movimentações: %d\n", movimentacoes);
+        }
+    }
+}
+
+void mergeComLog(int A[], int inicio, int meio, int fim, FILE* saida, 
+                 int* comparacoes, int* movimentacoes) {
+    int n1 = meio - inicio + 1;
+    int n2 = fim - meio;
+    int* L = (int*)malloc(n1 * sizeof(int));
+    int* R = (int*)malloc(n2 * sizeof(int));
+
+    // Copia os elementos para os arrays temporários
+    for (int i = 0; i < n1; i++) {
+        L[i] = A[inicio + i];
+        (*movimentacoes)++;
+    }
+    for (int j = 0; j < n2; j++) {
+        R[j] = A[meio + 1 + j];
+        (*movimentacoes)++;
+    }
+
+    int i = 0, j = 0, k = inicio;
+    
+    // Combina os arrays ordenados
+    while (i < n1 && j < n2) {
+        (*comparacoes)++;
+        fprintf(saida, "    Comparando %d com %d: ", L[i], R[j]);
+        
+        if (L[i] <= R[j]) {
+            fprintf(saida, "escolhe %d da esquerda\n", L[i]);
+            A[k] = L[i];
+            i++;
+        } else {
+            fprintf(saida, "escolhe %d da direita\n", R[j]);
+            A[k] = R[j];
+            j++;
+        }
+        (*movimentacoes)++;
+        k++;
+    }
+
+    // Copia os elementos restantes
+    while (i < n1) {
+        fprintf(saida, "    Copiando elemento restante da esquerda: %d\n", L[i]);
+        A[k] = L[i];
+        i++;
+        k++;
+        (*movimentacoes)++;
+    }
+
+    while (j < n2) {
+        fprintf(saida, "    Copiando elemento restante da direita: %d\n", R[j]);
+        A[k] = R[j];
+        j++;
+        k++;
+        (*movimentacoes)++;
+    }
+
+    free(L);
+    free(R);
+}
+
+void quickSortComLog(int A[], int inicio, int fim, FILE* saida) {
+    static int nivel = 0;
+    static int comparacoes = 0, movimentacoes = 0;
+    static long long inicio_ord;
+    
+    if (nivel == 0) {
+        fprintf(saida, "Iniciando Quick Sort com %d elementos\n\n", fim - inicio + 1);
+        comparacoes = movimentacoes = 0;
+        inicio_ord = getMicrotime();
+    }
+
+    if (inicio < fim) {
+        // Log do estado atual apenas no primeiro nível
+        if (nivel == 0) {
+            fprintf(saida, "Estado inicial: [");
+            for (int i = inicio; i <= fim; i++) {
+                fprintf(saida, "%d", A[i]);
+                if (i < fim) fprintf(saida, ", ");
+            }
+            fprintf(saida, "]\n\n");
+        }
+
+        int pi = particionarComLog(A, inicio, fim, saida, &comparacoes, &movimentacoes);
+        
+        nivel++;
+        quickSortComLog(A, inicio, pi - 1, saida);
+        quickSortComLog(A, pi + 1, fim, saida);
+        nivel--;
+
+        // Mostrar estatísticas apenas no final da ordenação completa
+        if (nivel == 0) {
+            long long fim_ord = getMicrotime();
+            double tempo_ord = (fim_ord - inicio_ord) / 1000.0;
+            
+            fprintf(saida, "\nEstado final: [");
+            for (int i = inicio; i <= fim; i++) {
+                fprintf(saida, "%d", A[i]);
+                if (i < fim) fprintf(saida, ", ");
+            }
+            fprintf(saida, "]\n");
+            
+            fprintf(saida, "\nEstatísticas do Quick Sort:\n");
+            fprintf(saida, "Total de comparacoes: %d\n", comparacoes);
+            fprintf(saida, "Total de movimentacoes: %d\n", movimentacoes);
+            fprintf(saida, "Tempo de ordenacao: %.3f milissegundos\n", tempo_ord);
+        }
+    }
+}
+
+int particionarComLog(int A[], int inicio, int fim, FILE* saida, 
+                     int* comparacoes, int* movimentacoes) {
     int pivo = A[fim];
     int i = inicio - 1;
 
+    if (saida) fprintf(saida, "  Pivo escolhido: %d\n", pivo);
+
     for (int j = inicio; j < fim; j++) {
+        (*comparacoes)++;
+        if (saida) fprintf(saida, "    Comparando A[%d]=%d com pivo %d: ", j, A[j], pivo);
+        
         if (A[j] <= pivo) {
             i++;
-            int temp = A[i];
-            A[i] = A[j];
-            A[j] = temp;
+            if (i != j) {  // Só conta movimentação se realmente houver troca
+                if (saida) {
+                    fprintf(saida, "troca\n");
+                    fprintf(saida, "      Trocando A[%d]=%d com A[%d]=%d\n", 
+                            i, A[i], j, A[j]);
+                }
+                int temp = A[i];
+                A[i] = A[j];
+                A[j] = temp;
+                *movimentacoes += 3;  // 3 movimentações: temp = A[i], A[i] = A[j], A[j] = temp
+            } else {
+                if (saida) fprintf(saida, "mantém (já está na posição correta)\n");
+            }
+        } else {
+            if (saida) fprintf(saida, "mantém\n");
         }
     }
 
-    int temp = A[i + 1];
-    A[i + 1] = A[fim];
-    A[fim] = temp;
+    // Troca o pivô para sua posição final
+    if (i + 1 != fim) {  // Só faz a troca se necessário
+        if (saida) fprintf(saida, "  Colocando pivo na posição final %d\n", i + 1);
+        int temp = A[i + 1];
+        A[i + 1] = A[fim];
+        A[fim] = temp;
+        *movimentacoes += 3;  // 3 movimentações para a troca do pivô
+    }
 
     return i + 1;
-}
-
-void quickSortRecursivo(int A[], int inicio, int fim) {
-    if (inicio < fim) {
-        int pi = particionar(A, inicio, fim);
-        quickSortRecursivo(A, inicio, pi - 1);
-        quickSortRecursivo(A, pi + 1, fim);
-    }
-}
-
-void quickSort(int A[], int inicio, int fim) {
-    quickSortRecursivo(A, inicio, fim);
 }
 
 void imprimirSubconjunto(int A[], int inicio, int fim) {
@@ -336,83 +491,46 @@ void ordenarSubconjunto(Particao* p, int elemento, MetodoOrdenacao metodo) {
     // Cria uma cópia do vetor para não modificar o original durante os testes
     int tamanho = fim - inicio + 1;
     int* vetorTeste = (int*)malloc(tamanho * sizeof(int));
+    memcpy(vetorTeste, &p->vetor[inicio], tamanho * sizeof(int));
     
-    // Executa a ordenação múltiplas vezes para obter uma média mais precisa
-    const int NUM_EXECUCOES = 1000;
-    double tempo_total = 0.0;
+    // Desordenar o vetor para testar ordenação
+    for (int i = tamanho - 1; i > 0; i--) {
+        int j = rand() % (i + 1);
+        int temp = vetorTeste[i];
+        vetorTeste[i] = vetorTeste[j];
+        vetorTeste[j] = temp;
+    }
     
+    // Log do estado após embaralhamento
+    fprintf(saida, "Estado após embaralhamento: [");
+    for (int i = 0; i < tamanho; i++) {
+        fprintf(saida, "%d", vetorTeste[i]);
+        if (i < tamanho - 1) fprintf(saida, ", ");
+    }
+    fprintf(saida, "]\n\n");
+
+    // Executa a ordenação
     switch (metodo) {
         case BUBBLE_SORT:
             fprintf(saida, "Usando Bubble Sort:\n");
-            for (int i = 0; i < NUM_EXECUCOES; i++) {
-                // Restaura o vetor ao estado original
-                memcpy(vetorTeste, &p->vetor[inicio], tamanho * sizeof(int));
-                
-                long long tempo_inicio = getMicrotime();
-                bubbleSort(vetorTeste, 0, tamanho - 1);
-                tempo_total += (getMicrotime() - tempo_inicio) / 1000000.0;
-            }
+            bubbleSortComLog(vetorTeste, 0, tamanho - 1, saida);
             break;
         case INSERTION_SORT:
             fprintf(saida, "Usando Insertion Sort:\n");
-            for (int i = 0; i < NUM_EXECUCOES; i++) {
-                memcpy(vetorTeste, &p->vetor[inicio], tamanho * sizeof(int));
-                
-                long long tempo_inicio = getMicrotime();
-                insertionSort(vetorTeste, 0, tamanho - 1);
-                tempo_total += (getMicrotime() - tempo_inicio) / 1000000.0;
-            }
+            insertionSortComLog(vetorTeste, 0, tamanho - 1, saida);
             break;
         case MERGE_SORT:
             fprintf(saida, "Usando Merge Sort:\n");
-            for (int i = 0; i < NUM_EXECUCOES; i++) {
-                memcpy(vetorTeste, &p->vetor[inicio], tamanho * sizeof(int));
-                
-                long long tempo_inicio = getMicrotime();
-                mergeSortComLog(vetorTeste, 0, tamanho - 1, saida);
-                tempo_total += (getMicrotime() - tempo_inicio) / 1000000.0;
-            }
+            mergeSortComLog(vetorTeste, 0, tamanho - 1, saida);
             break;
         case QUICK_SORT:
             fprintf(saida, "Usando Quick Sort:\n");
-            for (int i = 0; i < NUM_EXECUCOES; i++) {
-                memcpy(vetorTeste, &p->vetor[inicio], tamanho * sizeof(int));
-                
-                long long tempo_inicio = getMicrotime();
-                quickSort(vetorTeste, 0, tamanho - 1);
-                tempo_total += (getMicrotime() - tempo_inicio) / 1000000.0;
-            }
+            quickSortComLog(vetorTeste, 0, tamanho - 1, saida);
             break;
     }
 
-    // Calcula a média do tempo
-    double tempo_medio = tempo_total / NUM_EXECUCOES;
-
-    // Executa a ordenação final no vetor original
-    switch (metodo) {
-        case BUBBLE_SORT:
-            bubbleSortComLog(p->vetor, inicio, fim, saida);
-            break;
-        case INSERTION_SORT:
-            insertionSortComLog(p->vetor, inicio, fim, saida);
-            break;
-        case MERGE_SORT:
-            mergeSortComLog(p->vetor, inicio, fim, saida);
-            break;
-        case QUICK_SORT:
-            quickSortComLog(p->vetor, inicio, fim, saida);
-            break;
-    }
-
-    // Log do resultado
-    fprintf(saida, "\nEstado final do subconjunto: [");
-    for (int i = inicio; i <= fim; i++) {
-        fprintf(saida, "%d", p->vetor[i]);
-        if (i < fim) fprintf(saida, ", ");
-    }
-    fprintf(saida, "]\n");
-    fprintf(saida, "Tempo médio de ordenação (média de %d execuções): %.9f segundos\n", 
-            NUM_EXECUCOES, tempo_medio);
+    // Aplica a ordenação no vetor original
+    memcpy(&p->vetor[inicio], vetorTeste, tamanho * sizeof(int));
 
     free(vetorTeste);
     registrarOperacao(saida, "Ordenacao Concluida", detalhes);
@@ -495,178 +613,6 @@ void insertionSortComLog(int A[], int inicio, int fim, FILE* saida) {
     fprintf(saida, "Total de comparações: %d\n", comparacoes);
     fprintf(saida, "Total de movimentacoes: %d\n", movimentacoes);
     fprintf(saida, "Tempo de ordenacao: %.3f milissegundos\n", tempo_ord);
-}
-
-void mergeSortComLog(int A[], int inicio, int fim, FILE* saida) {
-    static int nivel = 0;
-    static int comparacoes = 0, movimentacoes = 0;
-    
-    if (nivel == 0) {
-        fprintf(saida, "Iniciando Merge Sort com %d elementos\n\n", fim - inicio + 1);
-        comparacoes = movimentacoes = 0;
-    }
-
-    if (inicio < fim) {
-        int meio = inicio + (fim - inicio) / 2;
-        
-        // Log da divisão atual
-        for (int i = 0; i < nivel; i++) fprintf(saida, "  ");
-        fprintf(saida, "Dividindo array [");
-        for (int i = inicio; i <= fim; i++) {
-            fprintf(saida, "%d", A[i]);
-            if (i < fim) fprintf(saida, ", ");
-        }
-        fprintf(saida, "] em duas partes\n");
-        
-        nivel++;
-        mergeSortComLog(A, inicio, meio, saida);
-        mergeSortComLog(A, meio + 1, fim, saida);
-        nivel--;
-
-        mergeComLog(A, inicio, meio, fim, saida, &comparacoes, &movimentacoes);
-
-        if (nivel == 0) {
-            fprintf(saida, "\nEstatísticas do Merge Sort:\n");
-            fprintf(saida, "Total de comparações: %d\n", comparacoes);
-            fprintf(saida, "Total de movimentações: %d\n", movimentacoes);
-        }
-    }
-}
-
-void mergeComLog(int A[], int inicio, int meio, int fim, FILE* saida, 
-                 int* comparacoes, int* movimentacoes) {
-    int n1 = meio - inicio + 1;
-    int n2 = fim - meio;
-    int* L = (int*)malloc(n1 * sizeof(int));
-    int* R = (int*)malloc(n2 * sizeof(int));
-
-    // Copia os elementos para os arrays temporários
-    for (int i = 0; i < n1; i++) {
-        L[i] = A[inicio + i];
-        (*movimentacoes)++;
-    }
-    for (int j = 0; j < n2; j++) {
-        R[j] = A[meio + 1 + j];
-        (*movimentacoes)++;
-    }
-
-    int i = 0, j = 0, k = inicio;
-    
-    // Combina os arrays ordenados
-    while (i < n1 && j < n2) {
-        (*comparacoes)++;
-        fprintf(saida, "    Comparando %d com %d: ", L[i], R[j]);
-        
-        if (L[i] <= R[j]) {
-            fprintf(saida, "escolhe %d da esquerda\n", L[i]);
-            A[k] = L[i];
-            i++;
-        } else {
-            fprintf(saida, "escolhe %d da direita\n", R[j]);
-            A[k] = R[j];
-            j++;
-        }
-        (*movimentacoes)++;
-        k++;
-    }
-
-    // Copia os elementos restantes
-    while (i < n1) {
-        fprintf(saida, "    Copiando elemento restante da esquerda: %d\n", L[i]);
-        A[k] = L[i];
-        i++;
-        k++;
-        (*movimentacoes)++;
-    }
-
-    while (j < n2) {
-        fprintf(saida, "    Copiando elemento restante da direita: %d\n", R[j]);
-        A[k] = R[j];
-        j++;
-        k++;
-        (*movimentacoes)++;
-    }
-
-    free(L);
-    free(R);
-}
-
-void quickSortComLog(int A[], int inicio, int fim, FILE* saida) {
-    static int nivel = 0;
-    static int comparacoes = 0, movimentacoes = 0;
-    static clock_t inicio_ord;
-    
-    if (nivel == 0) {
-        fprintf(saida, "Iniciando Quick Sort com %d elementos\n\n", fim - inicio + 1);
-        comparacoes = movimentacoes = 0;
-        inicio_ord = clock(); // Inicia contagem do tempo
-    }
-
-    if (inicio < fim) {
-        // Log do estado atual
-        for (int i = 0; i < nivel; i++) fprintf(saida, "  ");
-        fprintf(saida, "Particionando array [");
-        for (int i = inicio; i <= fim; i++) {
-            fprintf(saida, "%d", A[i]);
-            if (i < fim) fprintf(saida, ", ");
-        }
-        fprintf(saida, "], pivô = %d\n", A[fim]);
-
-        int pi = particionarComLog(A, inicio, fim, saida, &comparacoes, &movimentacoes);
-        
-        nivel++;
-        quickSortComLog(A, inicio, pi - 1, saida);
-        quickSortComLog(A, pi + 1, fim, saida);
-        nivel--;
-
-        if (nivel == 0) {
-            clock_t fim_ord = clock(); // Finaliza contagem do tempo
-            double tempo_ord = ((double)(fim_ord - inicio_ord) * 1000.0) / CLOCKS_PER_SEC;
-            
-            fprintf(saida, "\nEstatísticas do Quick Sort:\n");
-            fprintf(saida, "Total de comparacoes: %d\n", comparacoes);
-            fprintf(saida, "Total de movimentacoes: %d\n", movimentacoes);
-            fprintf(saida, "Tempo de ordenacao: %.3f milissegundos\n", tempo_ord);
-        }
-    }
-}
-
-int particionarComLog(int A[], int inicio, int fim, FILE* saida, 
-                     int* comparacoes, int* movimentacoes) {
-    int pivo = A[fim];
-    int i = inicio - 1;
-
-    fprintf(saida, "  Pivo escolhido: %d\n", pivo);
-
-    for (int j = inicio; j < fim; j++) {
-        (*comparacoes)++;
-        fprintf(saida, "    Comparando A[%d]=%d com pivo %d: ", j, A[j], pivo);
-        
-        if (A[j] <= pivo) {
-            i++;
-            fprintf(saida, "troca\n");
-            if (i != j) {
-                fprintf(saida, "      Trocando A[%d]=%d com A[%d]=%d\n", 
-                        i, A[i], j, A[j]);
-                int temp = A[i];
-                A[i] = A[j];
-                A[j] = temp;
-                (*movimentacoes) += 3;
-            }
-        } else {
-            fprintf(saida, "mantém\n");
-        }
-    }
-
-    if (i + 1 != fim) {
-        fprintf(saida, "  Colocando pivo na posição final %d\n", i + 1);
-        int temp = A[i + 1];
-        A[i + 1] = A[fim];
-        A[fim] = temp;
-        (*movimentacoes) += 3;
-    }
-
-    return i + 1;
 }
 
 UnionFind* createUnionFind(int size) {
