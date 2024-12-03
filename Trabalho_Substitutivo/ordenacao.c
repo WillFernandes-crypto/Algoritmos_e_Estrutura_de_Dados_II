@@ -545,15 +545,47 @@ void bubbleSortComLog(int A[], int inicio, int fim, FILE* saida) {
     
     long long inicio_ord = getMicrotime();
     
+    // Log do estado inicial
+    fprintf(saida, "Estado inicial: [");
+    for (int i = inicio; i <= fim; i++) {
+        fprintf(saida, "%d", A[i]);
+        if (i < fim) fprintf(saida, ", ");
+    }
+    fprintf(saida, "]\n\n");
+    
     for (int i = 0; i < comprimento - 1; i++) {
+        bool trocou = false;
+        fprintf(saida, "Passagem %d:\n", i + 1);
+        
         for (int j = inicio; j < inicio + comprimento - i - 1; j++) {
+            comparacoes++;
+            fprintf(saida, "  Comparando %d com %d: ", A[j], A[j + 1]);
+            
             if (A[j] > A[j + 1]) {
+                fprintf(saida, "troca\n");
                 // Trocar elementos
                 int temp = A[j];
                 A[j] = A[j + 1];
                 A[j + 1] = temp;
                 movimentacoes += 3;
+                trocou = true;
+            } else {
+                fprintf(saida, "mantém\n");
             }
+        }
+        
+        // Mostra estado atual do array após cada passagem
+        fprintf(saida, "  Estado atual: [");
+        for (int k = inicio; k <= fim; k++) {
+            fprintf(saida, "%d", A[k]);
+            if (k < fim) fprintf(saida, ", ");
+        }
+        fprintf(saida, "]\n\n");
+        
+        // Se não houve trocas, o array já está ordenado
+        if (!trocou) {
+            fprintf(saida, "Array já está ordenado, parando...\n\n");
+            break;
         }
     }
     
