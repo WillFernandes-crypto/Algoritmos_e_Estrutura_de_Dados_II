@@ -26,34 +26,115 @@ long long getMicrotime() {
 #endif
 }
 
-void bubbleSort(int A[], int inicio, int fim) {
+void bubbleSortComLog(int A[], int inicio, int fim, FILE* saida) {
     int comprimento = fim - inicio + 1;
-
+    int comparacoes = 0, movimentacoes = 0;
+    
+    fprintf(saida, "Iniciando Bubble Sort com %d elementos\n\n", comprimento);
+    
+    long long inicio_ord = getMicrotime();
+    
+    // Log do estado inicial
+    fprintf(saida, "Estado inicial: [");
+    for (int i = inicio; i <= fim; i++) {
+        fprintf(saida, "%d", A[i]);
+        if (i < fim) fprintf(saida, ", ");
+    }
+    fprintf(saida, "]\n\n");
+    
     for (int i = 0; i < comprimento - 1; i++) {
+        bool trocou = false;
+        fprintf(saida, "Passagem %d:\n", i + 1);
+        
         for (int j = inicio; j < inicio + comprimento - i - 1; j++) {
+            comparacoes++;
+            fprintf(saida, "  Comparando %d com %d: ", A[j], A[j + 1]);
+            
             if (A[j] > A[j + 1]) {
+                fprintf(saida, "troca\n");
                 // Trocar elementos
                 int temp = A[j];
                 A[j] = A[j + 1];
                 A[j + 1] = temp;
+                movimentacoes += 3;
+                trocou = true;
+            } else {
+                fprintf(saida, "mantém\n");
             }
         }
+        
+        // Mostra estado atual do array após cada passagem
+        fprintf(saida, "  Estado atual: [");
+        for (int k = inicio; k <= fim; k++) {
+            fprintf(saida, "%d", A[k]);
+            if (k < fim) fprintf(saida, ", ");
+        }
+        fprintf(saida, "]\n\n");
+        
+        // Se não houve trocas, o array já está ordenado
+        if (!trocou) {
+            fprintf(saida, "Array já está ordenado, parando...\n\n");
+            break;
+        }
     }
+    
+    long long fim_ord = getMicrotime();
+    double tempo_ord = (fim_ord - inicio_ord) / 1000.0;
+
+    fprintf(saida, "\nEstatísticas do Bubble Sort:\n");
+    fprintf(saida, "Total de comparacoes: %d\n", comparacoes);
+    fprintf(saida, "Total de movimentacoes: %d\n", movimentacoes);
+    fprintf(saida, "Tempo de ordenacao: %.3f milissegundos\n", tempo_ord);
 }
 
-void insertionSort(int A[], int inicio, int fim) {
+void insertionSortComLog(int A[], int inicio, int fim, FILE* saida) {
+    int comprimento = fim - inicio + 1;
+    int comparacoes = 0, movimentacoes = 0;
+
+    fprintf(saida, "Iniciando Insertion Sort com %d elementos\n\n", comprimento);
+    
+    long long inicio_ord = getMicrotime();
+    
     for (int i = inicio + 1; i <= fim; i++) {
         int chave = A[i];
         int j = i - 1;
-
+        
+        fprintf(saida, "Inserindo elemento A[%d] = %d:\n", i, chave);
+        
+        bool moveu = false;
         while (j >= inicio && A[j] > chave) {
+            fprintf(saida, "  Comparando %d com %d: move para direita\n", A[j], chave);
             A[j + 1] = A[j];
             j--;
+            comparacoes++;
+            movimentacoes++;
+            moveu = true;
         }
-        A[j + 1] = chave;
+        
+        if (!moveu) {
+            fprintf(saida, "  Elemento %d já está na posição correta\n", chave);
+            comparacoes++;
+        } else {
+            A[j + 1] = chave;
+            movimentacoes++;
+        }
+        
+        fprintf(saida, "  Estado atual: [");
+        for (int k = inicio; k <= fim; k++) {
+            fprintf(saida, "%d", A[k]);
+            if (k < fim) fprintf(saida, ", ");
+        }
+        fprintf(saida, "]\n\n");
     }
-}
+    
+    long long fim_ord = getMicrotime();
+    double tempo_ord = (fim_ord - inicio_ord) / 1000.0;
 
+    fprintf(saida, "\nEstatísticas do Insertion Sort:\n");
+    fprintf(saida, "Total de comparações: %d\n", comparacoes);
+    fprintf(saida, "Total de movimentacoes: %d\n", movimentacoes);
+    fprintf(saida, "Tempo de ordenacao: %.3f milissegundos\n", tempo_ord);
+}
 
 void mergeSortComLog(int A[], int inicio, int fim, FILE* saida) {
     static int nivel = 0;
@@ -415,27 +496,24 @@ void unirSubconjuntos(Particao* p, int elemento1, int elemento2) {
 
     // Log do estado inicial
     fprintf(saida, "Estado inicial dos subconjuntos:\n");
-    if (subconj1 != -1) {
-        fprintf(saida, "Subconjunto 1 (contem elemento %d): [", elemento1);
-        for (int i = p->subconj[subconj1].inicio; i <= p->subconj[subconj1].fim; i++) {
-            fprintf(saida, "%d", p->vetor[i]);
-            if (i < p->subconj[subconj1].fim) fprintf(saida, ", ");
-        }
-        fprintf(saida, "]\n");
+    fprintf(saida, "Subconjunto %d: [", subconj1 + 1);
+    for (int i = p->subconj[subconj1].inicio; i <= p->subconj[subconj1].fim; i++) {
+        fprintf(saida, "%d", p->vetor[i]);
+        if (i < p->subconj[subconj1].fim) fprintf(saida, ", ");
     }
-    if (subconj2 != -1) {
-        fprintf(saida, "Subconjunto 2 (contem elemento %d): [", elemento2);
-        for (int i = p->subconj[subconj2].inicio; i <= p->subconj[subconj2].fim; i++) {
-            fprintf(saida, "%d", p->vetor[i]);
-            if (i < p->subconj[subconj2].fim) fprintf(saida, ", ");
-        }
-        fprintf(saida, "]\n");
+    fprintf(saida, "]\n");
+    
+    fprintf(saida, "Subconjunto %d: [", subconj2 + 1);
+    for (int i = p->subconj[subconj2].inicio; i <= p->subconj[subconj2].fim; i++) {
+        fprintf(saida, "%d", p->vetor[i]);
+        if (i < p->subconj[subconj2].fim) fprintf(saida, ", ");
     }
+    fprintf(saida, "]\n\n");
 
     if (subconj1 == -1 || subconj2 == -1 || subconj1 == subconj2) {
-        sprintf(detalhes, "Não e possível unir os subconjuntos: %s",
-                subconj1 == subconj2 ? "Elementos no mesmo subconjunto" : "Elemento(s) nao encontrado(s)");
-        registrarOperacao(saida, "Erro na Uniao", detalhes);
+        sprintf(detalhes, "Não é possível unir os subconjuntos: %s",
+                subconj1 == subconj2 ? "Elementos no mesmo subconjunto" : "Elemento(s) não encontrado(s)");
+        registrarOperacao(saida, "Erro na União", detalhes);
         printf("%s\n", detalhes);
         fclose(saida);
         return;
@@ -444,42 +522,119 @@ void unirSubconjuntos(Particao* p, int elemento1, int elemento2) {
     // Reorganiza os subconjuntos
     reorganizarSubconjuntos(p, subconj1, subconj2);
 
-    // Log do resultado
-    fprintf(saida, "\nResultado da uniao:\n");
-    fprintf(saida, "Novo subconjunto: [");
-    for (int i = p->subconj[subconj1].inicio; i <= p->subconj[subconj1].fim; i++) {
-        fprintf(saida, "%d", p->vetor[i]);
-        if (i < p->subconj[subconj1].fim) fprintf(saida, ", ");
+    // Log do estado final
+    fprintf(saida, "Estado final dos subconjuntos:\n");
+    for (int i = 0; i < p->k; i++) {
+        fprintf(saida, "Subconjunto %d: [", i + 1);
+        for (int j = p->subconj[i].inicio; j <= p->subconj[i].fim; j++) {
+            fprintf(saida, "%d", p->vetor[j]);
+            if (j < p->subconj[i].fim) fprintf(saida, ", ");
+        }
+        fprintf(saida, "] (início: %d, fim: %d)\n", p->subconj[i].inicio, p->subconj[i].fim);
     }
-    fprintf(saida, "]\n");
 
-    registrarOperacao(saida, "Uniao Concluída", "Subconjuntos unidos com sucesso");
+    registrarOperacao(saida, "União Concluída", "Subconjuntos unidos com sucesso");
     printf("Subconjuntos unidos com sucesso!\n");
     fclose(saida);
 }
 
 void reorganizarSubconjuntos(Particao* p, int subconj1, int subconj2) {
-    // Determina o incio e fim do novo subconjunto unido
-    int novoInicio = p->subconj[subconj1].inicio < p->subconj[subconj2].inicio ?
-                     p->subconj[subconj1].inicio : p->subconj[subconj2].inicio;
-
-    int novoFim = p->subconj[subconj1].fim > p->subconj[subconj2].fim ?
-                  p->subconj[subconj1].fim : p->subconj[subconj2].fim;
-
-    // Atualiza o primeiro subconjunto para incluir ambos
-    p->subconj[subconj1].inicio = novoInicio;
-    p->subconj[subconj1].fim = novoFim;
-
-    // Remove o segundo subconjunto movendo os outros para frente
-    for (int i = subconj2; i < p->k - 1; i++) {
-        p->subconj[i] = p->subconj[i + 1];
+    // Criar array temporário para todo o vetor
+    int* novo_vetor = (int*)malloc(p->n * sizeof(int));
+    bool* usado = (bool*)calloc(p->n + 1, sizeof(bool));
+    int pos = 0;
+    
+    // Criar novo array de subconjuntos
+    Subconjunto* novos_subconj = (Subconjunto*)malloc(p->k * sizeof(Subconjunto));
+    int novo_k = 0;
+    
+    // 1. Primeiro, unir os subconjuntos selecionados (sem duplicatas)
+    int inicio_uniao = pos;
+    for (int i = p->subconj[subconj1].inicio; i <= p->subconj[subconj1].fim; i++) {
+        if (!usado[p->vetor[i]]) {
+            novo_vetor[pos++] = p->vetor[i];
+            usado[p->vetor[i]] = true;
+        }
     }
-
-    // Diminui o nmero de subconjuntos
-    p->k--;
-
-    // Redefine o representante do subconjunto unido
-    definirRepresentante(p, subconj1);
+    for (int i = p->subconj[subconj2].inicio; i <= p->subconj[subconj2].fim; i++) {
+        if (!usado[p->vetor[i]]) {
+            novo_vetor[pos++] = p->vetor[i];
+            usado[p->vetor[i]] = true;
+        }
+    }
+    
+    // Ordenar o subconjunto unido
+    for (int i = inicio_uniao; i < pos - 1; i++) {
+        for (int j = i + 1; j < pos; j++) {
+            if (novo_vetor[i] > novo_vetor[j]) {
+                int temp = novo_vetor[i];
+                novo_vetor[i] = novo_vetor[j];
+                novo_vetor[j] = temp;
+            }
+        }
+    }
+    
+    // Adicionar o subconjunto unido
+    if (pos > inicio_uniao) {
+        novos_subconj[novo_k].inicio = inicio_uniao;
+        novos_subconj[novo_k].fim = pos - 1;
+        novo_k++;
+    }
+    
+    // 2. Copiar os outros subconjuntos (mantendo elementos não usados)
+    for (int i = 0; i < p->k; i++) {
+        if (i != subconj1 && i != subconj2) {
+            int inicio_atual = pos;
+            bool tem_elementos = false;
+            
+            // Copiar apenas elementos não usados
+            for (int j = p->subconj[i].inicio; j <= p->subconj[i].fim; j++) {
+                if (!usado[p->vetor[j]]) {
+                    novo_vetor[pos++] = p->vetor[j];
+                    usado[p->vetor[j]] = true;
+                    tem_elementos = true;
+                }
+            }
+            
+            // Só cria subconjunto se tiver elementos
+            if (tem_elementos) {
+                novos_subconj[novo_k].inicio = inicio_atual;
+                novos_subconj[novo_k].fim = pos - 1;
+                novo_k++;
+            }
+        }
+    }
+    
+    // 3. Copiar elementos restantes (que não estão em nenhum subconjunto)
+    int inicio_resto = pos;
+    bool tem_resto = false;
+    for (int i = 1; i <= p->n; i++) {
+        if (!usado[i]) {
+            novo_vetor[pos++] = i;
+            tem_resto = true;
+        }
+    }
+    
+    // Se houver elementos restantes, criar um novo subconjunto para eles
+    if (tem_resto) {
+        novos_subconj[novo_k].inicio = inicio_resto;
+        novos_subconj[novo_k].fim = pos - 1;
+        novo_k++;
+    }
+    
+    // Atualizar a partição
+    memcpy(p->vetor, novo_vetor, p->n * sizeof(int));
+    memcpy(p->subconj, novos_subconj, novo_k * sizeof(Subconjunto));
+    p->k = novo_k;
+    
+    free(novo_vetor);
+    free(novos_subconj);
+    free(usado);
+    
+    // Redefinir representantes
+    for (int i = 0; i < p->k; i++) {
+        definirRepresentante(p, i);
+    }
 }
 
 void ordenarSubconjunto(Particao* p, int elemento, MetodoOrdenacao metodo) {
@@ -557,116 +712,6 @@ void ordenarSubconjunto(Particao* p, int elemento, MetodoOrdenacao metodo) {
     free(vetorTeste);
     registrarOperacao(saida, "Ordenacao Concluida", detalhes);
     fclose(saida);
-}
-
-void bubbleSortComLog(int A[], int inicio, int fim, FILE* saida) {
-    int comprimento = fim - inicio + 1;
-    int comparacoes = 0, movimentacoes = 0;
-    
-    fprintf(saida, "Iniciando Bubble Sort com %d elementos\n\n", comprimento);
-    
-    long long inicio_ord = getMicrotime();
-    
-    // Log do estado inicial
-    fprintf(saida, "Estado inicial: [");
-    for (int i = inicio; i <= fim; i++) {
-        fprintf(saida, "%d", A[i]);
-        if (i < fim) fprintf(saida, ", ");
-    }
-    fprintf(saida, "]\n\n");
-    
-    for (int i = 0; i < comprimento - 1; i++) {
-        bool trocou = false;
-        fprintf(saida, "Passagem %d:\n", i + 1);
-        
-        for (int j = inicio; j < inicio + comprimento - i - 1; j++) {
-            comparacoes++;
-            fprintf(saida, "  Comparando %d com %d: ", A[j], A[j + 1]);
-            
-            if (A[j] > A[j + 1]) {
-                fprintf(saida, "troca\n");
-                // Trocar elementos
-                int temp = A[j];
-                A[j] = A[j + 1];
-                A[j + 1] = temp;
-                movimentacoes += 3;
-                trocou = true;
-            } else {
-                fprintf(saida, "mantém\n");
-            }
-        }
-        
-        // Mostra estado atual do array após cada passagem
-        fprintf(saida, "  Estado atual: [");
-        for (int k = inicio; k <= fim; k++) {
-            fprintf(saida, "%d", A[k]);
-            if (k < fim) fprintf(saida, ", ");
-        }
-        fprintf(saida, "]\n\n");
-        
-        // Se não houve trocas, o array já está ordenado
-        if (!trocou) {
-            fprintf(saida, "Array já está ordenado, parando...\n\n");
-            break;
-        }
-    }
-    
-    long long fim_ord = getMicrotime();
-    double tempo_ord = (fim_ord - inicio_ord) / 1000.0;
-
-    fprintf(saida, "\nEstatísticas do Bubble Sort:\n");
-    fprintf(saida, "Total de comparacoes: %d\n", comparacoes);
-    fprintf(saida, "Total de movimentacoes: %d\n", movimentacoes);
-    fprintf(saida, "Tempo de ordenacao: %.3f milissegundos\n", tempo_ord);
-}
-
-void insertionSortComLog(int A[], int inicio, int fim, FILE* saida) {
-    int comprimento = fim - inicio + 1;
-    int comparacoes = 0, movimentacoes = 0;
-
-    fprintf(saida, "Iniciando Insertion Sort com %d elementos\n\n", comprimento);
-    
-    long long inicio_ord = getMicrotime();
-    
-    for (int i = inicio + 1; i <= fim; i++) {
-        int chave = A[i];
-        int j = i - 1;
-        
-        fprintf(saida, "Inserindo elemento A[%d] = %d:\n", i, chave);
-        
-        bool moveu = false;
-        while (j >= inicio && A[j] > chave) {
-            fprintf(saida, "  Comparando %d com %d: move para direita\n", A[j], chave);
-            A[j + 1] = A[j];
-            j--;
-            comparacoes++;
-            movimentacoes++;
-            moveu = true;
-        }
-        
-        if (!moveu) {
-            fprintf(saida, "  Elemento %d já está na posição correta\n", chave);
-            comparacoes++;
-        } else {
-            A[j + 1] = chave;
-            movimentacoes++;
-        }
-        
-        fprintf(saida, "  Estado atual: [");
-        for (int k = inicio; k <= fim; k++) {
-            fprintf(saida, "%d", A[k]);
-            if (k < fim) fprintf(saida, ", ");
-        }
-        fprintf(saida, "]\n\n");
-    }
-    
-    long long fim_ord = getMicrotime();
-    double tempo_ord = (fim_ord - inicio_ord) / 1000.0;
-
-    fprintf(saida, "\nEstatísticas do Insertion Sort:\n");
-    fprintf(saida, "Total de comparações: %d\n", comparacoes);
-    fprintf(saida, "Total de movimentacoes: %d\n", movimentacoes);
-    fprintf(saida, "Tempo de ordenacao: %.3f milissegundos\n", tempo_ord);
 }
 
 UnionFind* createUnionFind(int size) {
