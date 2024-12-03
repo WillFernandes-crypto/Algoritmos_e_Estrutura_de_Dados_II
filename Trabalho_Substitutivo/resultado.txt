@@ -5,12 +5,22 @@
 
 Ambiguidade detectada!
 
-Conjunto 1:
-  Elementos: {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
-  Distribuídos nos subconjuntos: {1, 3, 2}
+Problema encontrado:
+- Os subconjuntos atuais compartilham elementos entre si
+- Por exemplo, os subconjuntos {4, 5, 6, 7, 8} e {6, 7, 8, 9} compartilham os elementos 6, 7 e 8
+
+Exemplo de partição sem ambiguidade para n=14 e k=6:
+Subconjunto 1: {1, 2, 3}
+Subconjunto 2: {4, 5, 6}
+Subconjunto 3: {7, 8, 9}
+Subconjunto 4: {10, 11}
+Subconjunto 5: {12, 13, 14}
+
+Nesta partição exemplo, cada elemento pertence a exatamente um subconjunto,
+não havendo sobreposição entre os subconjuntos.
 
 
-=== Ordenacao (2.047 segundos) ===
+=== Ordenacao (5.347 segundos) ===
 Iniciando ordenacao do subconjunto contendo elemento 3
 Estado inicial do subconjunto: [1, 2, 3, 4]
 
@@ -34,13 +44,13 @@ Total de comparações: 4
 Total de movimentações: 16
 
 Estado final do subconjunto: [1, 2, 3, 4]
-Tempo médio de ordenação (média de 1000 execuções): 0.000000677 segundos
+Tempo médio de ordenação (média de 1000 execuções): 0.000000785 segundos
 
-=== Ordenacao Concluida (2.047 segundos) ===
+=== Ordenacao Concluida (5.348 segundos) ===
 Iniciando ordenacao do subconjunto contendo elemento 3
 
 ====== Resultado Final ======
-Tempo total de execução: 3.265000 segundos
+Tempo total de execução: 7.195000 segundos
 Tamanho do vetor (n): 14
 Número de subconjuntos (k): 6
 

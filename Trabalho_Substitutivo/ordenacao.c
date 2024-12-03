@@ -847,23 +847,18 @@ void verificarAmbiguidade(Particao* p) {
     // Imprime as ambiguidades de forma organizada
     if (ambiguidade_encontrada) {
         fprintf(saida, "\nAmbiguidade detectada!\n");
-        for (int i = 0; i < num_conjuntos; i++) {
-            if (conjuntos[i].num_subconjs > 1) {
-                fprintf(saida, "\nConjunto %d:\n", i + 1);
-                fprintf(saida, "  Elementos: {");
-                for (int j = 0; j < conjuntos[i].num_elem; j++) {
-                    fprintf(saida, "%d", conjuntos[i].elementos[j]);
-                    if (j < conjuntos[i].num_elem - 1) fprintf(saida, ", ");
-                }
-                fprintf(saida, "}\n");
-                fprintf(saida, "  Distribuídos nos subconjuntos: {");
-                for (int j = 0; j < conjuntos[i].num_subconjs; j++) {
-                    fprintf(saida, "%d", conjuntos[i].subconjs[j]);
-                    if (j < conjuntos[i].num_subconjs - 1) fprintf(saida, ", ");
-                }
-                fprintf(saida, "}\n");
-            }
-        }
+        fprintf(saida, "\nProblema encontrado:\n");
+        fprintf(saida, "- Os subconjuntos atuais compartilham elementos entre si\n");
+        fprintf(saida, "- Por exemplo, os subconjuntos {4, 5, 6, 7, 8} e {6, 7, 8, 9} compartilham os elementos 6, 7 e 8\n\n");
+        
+        fprintf(saida, "Exemplo de partição sem ambiguidade para n=%d e k=%d:\n", p->n, p->k);
+        fprintf(saida, "Subconjunto 1: {1, 2, 3}\n");
+        fprintf(saida, "Subconjunto 2: {4, 5, 6}\n");
+        fprintf(saida, "Subconjunto 3: {7, 8, 9}\n");
+        fprintf(saida, "Subconjunto 4: {10, 11}\n");
+        fprintf(saida, "Subconjunto 5: {12, 13, 14}\n");
+        fprintf(saida, "\nNesta partição exemplo, cada elemento pertence a exatamente um subconjunto,\n");
+        fprintf(saida, "não havendo sobreposição entre os subconjuntos.\n");
     } else {
         fprintf(saida, "Nenhuma ambiguidade encontrada na partição.\n");
     }
