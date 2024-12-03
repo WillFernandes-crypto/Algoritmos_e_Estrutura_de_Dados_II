@@ -20,7 +20,7 @@ Nesta partição exemplo, cada elemento pertence a exatamente um subconjunto,
 não havendo sobreposição entre os subconjuntos.
 
 
-=== Ordenacao (4.557 segundos) ===
+=== Ordenacao (5.703 segundos) ===
 Iniciando ordenacao do subconjunto contendo elemento 3
 Estado inicial do subconjunto: [1, 2, 3, 4]
 
@@ -52,13 +52,110 @@ Array já está ordenado, parando...
 Estatísticas do Bubble Sort:
 Total de comparacoes: 6
 Total de movimentacoes: 12
-Tempo de ordenacao: 0.006 milissegundos
+Tempo de ordenacao: 0.015 milissegundos
 
-=== Ordenacao Concluida (4.557 segundos) ===
+=== Ordenacao Concluida (5.703 segundos) ===
+Iniciando ordenacao do subconjunto contendo elemento 3
+
+=== Ordenacao (7.693 segundos) ===
+Iniciando ordenacao do subconjunto contendo elemento 3
+Estado inicial do subconjunto: [1, 2, 3, 4]
+
+Estado após embaralhamento: [2, 4, 3, 1]
+
+Usando Insertion Sort:
+Iniciando Insertion Sort com 4 elementos
+
+Inserindo elemento A[1] = 4:
+  Elemento 4 já está na posição correta
+  Estado atual: [2, 4, 3, 1]
+
+Inserindo elemento A[2] = 3:
+  Comparando 4 com 3: move para direita
+  Estado atual: [2, 3, 4, 1]
+
+Inserindo elemento A[3] = 1:
+  Comparando 4 com 1: move para direita
+  Comparando 3 com 1: move para direita
+  Comparando 2 com 1: move para direita
+  Estado atual: [1, 2, 3, 4]
+
+
+Estatísticas do Insertion Sort:
+Total de comparações: 5
+Total de movimentacoes: 6
+Tempo de ordenacao: 0.011 milissegundos
+
+=== Ordenacao Concluida (7.693 segundos) ===
+Iniciando ordenacao do subconjunto contendo elemento 3
+
+=== Ordenacao (9.485 segundos) ===
+Iniciando ordenacao do subconjunto contendo elemento 3
+Estado inicial do subconjunto: [1, 2, 3, 4]
+
+Estado após embaralhamento: [2, 4, 1, 3]
+
+Usando Merge Sort:
+Iniciando Merge Sort com 4 elementos
+
+Estado inicial: [2, 4, 1, 3]
+
+Dividindo array [2, 4, 1, 3] em duas partes
+  Dividindo array [2, 4] em duas partes
+    Comparando 2 com 4: escolhe 2 da esquerda
+    Copiando elemento restante da direita: 4
+  Dividindo array [1, 3] em duas partes
+    Comparando 1 com 3: escolhe 1 da esquerda
+    Copiando elemento restante da direita: 3
+    Comparando 2 com 1: escolhe 1 da direita
+    Comparando 2 com 3: escolhe 2 da esquerda
+    Comparando 4 com 3: escolhe 3 da direita
+    Copiando elemento restante da esquerda: 4
+
+Estado final: [1, 2, 3, 4]
+
+Estatísticas do Merge Sort:
+Total de comparações: 5
+Total de movimentações: 16
+Tempo de ordenacao: 0.020 milissegundos
+
+=== Ordenacao Concluida (9.485 segundos) ===
+Iniciando ordenacao do subconjunto contendo elemento 3
+
+=== Ordenacao (11.533 segundos) ===
+Iniciando ordenacao do subconjunto contendo elemento 3
+Estado inicial do subconjunto: [1, 2, 3, 4]
+
+Estado após embaralhamento: [4, 2, 3, 1]
+
+Usando Quick Sort:
+Iniciando Quick Sort com 4 elementos
+
+Estado inicial: [4, 2, 3, 1]
+
+  Pivo escolhido: 1
+    Comparando A[0]=4 com pivo 1: mantém
+    Comparando A[1]=2 com pivo 1: mantém
+    Comparando A[2]=3 com pivo 1: mantém
+  Colocando pivo na posição final 0
+  Pivo escolhido: 4
+    Comparando A[1]=2 com pivo 4: mantém (já está na posição correta)
+    Comparando A[2]=3 com pivo 4: mantém (já está na posição correta)
+  Pivo escolhido: 3
+    Comparando A[1]=2 com pivo 3: mantém (já está na posição correta)
+
+Estado final: [1, 2, 3, 4]
+
+Estatísticas do Quick Sort:
+Total de comparacoes: 6
+Total de movimentacoes: 3
+Tempo de ordenacao: 0.013 milissegundos
+
+=== Ordenacao Concluida (11.533 segundos) ===
 Iniciando ordenacao do subconjunto contendo elemento 3
 
 ====== Resultado Final ======
-Tempo total de execução: 5.960000 segundos
+Tempo total de execução: 12.199000 segundos
 Tamanho do vetor (n): 14
 Número de subconjuntos (k): 6
 

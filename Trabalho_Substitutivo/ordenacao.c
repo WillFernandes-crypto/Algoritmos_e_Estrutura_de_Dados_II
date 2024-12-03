@@ -58,10 +58,20 @@ void insertionSort(int A[], int inicio, int fim) {
 void mergeSortComLog(int A[], int inicio, int fim, FILE* saida) {
     static int nivel = 0;
     static int comparacoes = 0, movimentacoes = 0;
+    static long long inicio_ord;
     
     if (nivel == 0) {
         fprintf(saida, "Iniciando Merge Sort com %d elementos\n\n", fim - inicio + 1);
         comparacoes = movimentacoes = 0;
+        inicio_ord = getMicrotime();
+
+        // Mostrar estado inicial
+        fprintf(saida, "Estado inicial: [");
+        for (int i = inicio; i <= fim; i++) {
+            fprintf(saida, "%d", A[i]);
+            if (i < fim) fprintf(saida, ", ");
+        }
+        fprintf(saida, "]\n\n");
     }
 
     if (inicio < fim) {
@@ -84,9 +94,21 @@ void mergeSortComLog(int A[], int inicio, int fim, FILE* saida) {
         mergeComLog(A, inicio, meio, fim, saida, &comparacoes, &movimentacoes);
 
         if (nivel == 0) {
+            // Mostrar estado final
+            fprintf(saida, "\nEstado final: [");
+            for (int i = inicio; i <= fim; i++) {
+                fprintf(saida, "%d", A[i]);
+                if (i < fim) fprintf(saida, ", ");
+            }
+            fprintf(saida, "]\n");
+
+            long long fim_ord = getMicrotime();
+            double tempo_ord = (fim_ord - inicio_ord) / 1000.0;
+
             fprintf(saida, "\nEstatísticas do Merge Sort:\n");
             fprintf(saida, "Total de comparações: %d\n", comparacoes);
             fprintf(saida, "Total de movimentações: %d\n", movimentacoes);
+            fprintf(saida, "Tempo de ordenacao: %.3f milissegundos\n", tempo_ord);
         }
     }
 }
@@ -604,18 +626,17 @@ void insertionSortComLog(int A[], int inicio, int fim, FILE* saida) {
 
     fprintf(saida, "Iniciando Insertion Sort com %d elementos\n\n", comprimento);
     
-    clock_t inicio_ord = clock(); // Inicia contagem do tempo
+    long long inicio_ord = getMicrotime();
     
     for (int i = inicio + 1; i <= fim; i++) {
         int chave = A[i];
         int j = i - 1;
         
         fprintf(saida, "Inserindo elemento A[%d] = %d:\n", i, chave);
-        fprintf(saida, "  Comparando com elementos anteriores:\n");
         
         bool moveu = false;
         while (j >= inicio && A[j] > chave) {
-            fprintf(saida, "    A[%d]=%d > %d: move para direita\n", j, A[j], chave);
+            fprintf(saida, "  Comparando %d com %d: move para direita\n", A[j], chave);
             A[j + 1] = A[j];
             j--;
             comparacoes++;
@@ -624,11 +645,12 @@ void insertionSortComLog(int A[], int inicio, int fim, FILE* saida) {
         }
         
         if (!moveu) {
-            fprintf(saida, "  Elemento já está na posição correta\n");
+            fprintf(saida, "  Elemento %d já está na posição correta\n", chave);
+            comparacoes++;
+        } else {
+            A[j + 1] = chave;
+            movimentacoes++;
         }
-        
-        A[j + 1] = chave;
-        if (moveu) movimentacoes++;
         
         fprintf(saida, "  Estado atual: [");
         for (int k = inicio; k <= fim; k++) {
@@ -638,8 +660,8 @@ void insertionSortComLog(int A[], int inicio, int fim, FILE* saida) {
         fprintf(saida, "]\n\n");
     }
     
-    clock_t fim_ord = clock(); // Finaliza contagem do tempo
-    double tempo_ord = ((double)(fim_ord - inicio_ord) * 1000.0) / CLOCKS_PER_SEC;
+    long long fim_ord = getMicrotime();
+    double tempo_ord = (fim_ord - inicio_ord) / 1000.0;
 
     fprintf(saida, "\nEstatísticas do Insertion Sort:\n");
     fprintf(saida, "Total de comparações: %d\n", comparacoes);
