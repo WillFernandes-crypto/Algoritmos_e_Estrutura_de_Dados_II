@@ -548,8 +548,8 @@ void reorganizarSubconjuntos(Particao* p, int subconj1, int subconj2) {
     Subconjunto* novos_subconj = (Subconjunto*)malloc(p->k * sizeof(Subconjunto));
     int novo_k = 0;
     
-    // 1. Primeiro, unir os subconjuntos selecionados (sem duplicatas)
-    int inicio_uniao = pos;
+    // 1. Primeiro, unir os subconjuntos selecionados
+    int inicio_unido = pos;
     for (int i = p->subconj[subconj1].inicio; i <= p->subconj[subconj1].fim; i++) {
         if (!usado[p->vetor[i]]) {
             novo_vetor[pos++] = p->vetor[i];
@@ -564,7 +564,7 @@ void reorganizarSubconjuntos(Particao* p, int subconj1, int subconj2) {
     }
     
     // Ordenar o subconjunto unido
-    for (int i = inicio_uniao; i < pos - 1; i++) {
+    for (int i = inicio_unido; i < pos - 1; i++) {
         for (int j = i + 1; j < pos; j++) {
             if (novo_vetor[i] > novo_vetor[j]) {
                 int temp = novo_vetor[i];
@@ -575,29 +575,27 @@ void reorganizarSubconjuntos(Particao* p, int subconj1, int subconj2) {
     }
     
     // Adicionar o subconjunto unido
-    if (pos > inicio_uniao) {
-        novos_subconj[novo_k].inicio = inicio_uniao;
-        novos_subconj[novo_k].fim = pos - 1;
-        novo_k++;
-    }
+    novos_subconj[novo_k].inicio = inicio_unido;
+    novos_subconj[novo_k].fim = pos - 1;
+    novo_k++;
     
-    // 2. Copiar os outros subconjuntos (mantendo elementos não usados)
+    // 2. Copiar os outros subconjuntos em sequência
     for (int i = 0; i < p->k; i++) {
         if (i != subconj1 && i != subconj2) {
             int inicio_atual = pos;
-            bool tem_elementos = false;
+            int elementos_copiados = 0;
             
-            // Copiar apenas elementos não usados
+            // Copiar elementos não usados
             for (int j = p->subconj[i].inicio; j <= p->subconj[i].fim; j++) {
                 if (!usado[p->vetor[j]]) {
                     novo_vetor[pos++] = p->vetor[j];
                     usado[p->vetor[j]] = true;
-                    tem_elementos = true;
+                    elementos_copiados++;
                 }
             }
             
-            // Só cria subconjunto se tiver elementos
-            if (tem_elementos) {
+            // Só adiciona subconjunto se tiver elementos
+            if (elementos_copiados > 0) {
                 novos_subconj[novo_k].inicio = inicio_atual;
                 novos_subconj[novo_k].fim = pos - 1;
                 novo_k++;
@@ -605,7 +603,7 @@ void reorganizarSubconjuntos(Particao* p, int subconj1, int subconj2) {
         }
     }
     
-    // 3. Copiar elementos restantes (que não estão em nenhum subconjunto)
+    // 3. Preencher o resto do vetor com elementos não usados em ordem
     int inicio_resto = pos;
     bool tem_resto = false;
     for (int i = 1; i <= p->n; i++) {
@@ -615,7 +613,7 @@ void reorganizarSubconjuntos(Particao* p, int subconj1, int subconj2) {
         }
     }
     
-    // Se houver elementos restantes, criar um novo subconjunto para eles
+    // Adicionar subconjunto com elementos restantes se houver
     if (tem_resto) {
         novos_subconj[novo_k].inicio = inicio_resto;
         novos_subconj[novo_k].fim = pos - 1;
