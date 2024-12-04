@@ -1,0 +1,242 @@
+====== Log de Operações ======
+
+
+=== Verificação de Ambiguidade ===
+
+Ambiguidade detectada!
+
+Problema encontrado:
+- Os subconjuntos atuais compartilham elementos entre si
+- Por exemplo, os subconjuntos {4, 5, 6, 7, 8} e {6, 7, 8, 9} compartilham os elementos 6, 7 e 8
+
+Exemplo de partição sem ambiguidade para n=14 e k=6:
+Subconjunto 1: {1, 2, 3}
+Subconjunto 2: {4, 5, 6}
+Subconjunto 3: {7, 8, 9}
+Subconjunto 4: {10, 11}
+Subconjunto 5: {12, 13, 14}
+
+Nesta partição exemplo, cada elemento pertence a exatamente um subconjunto,
+não havendo sobreposição entre os subconjuntos.
+
+
+=== Uniao de Subconjuntos (2.987 segundos) ===
+Tentativa de uniao dos subconjuntos contendo elementos 1 e 9
+Estado inicial dos subconjuntos:
+Subconjunto 1: [1, 2, 3, 4]
+Subconjunto 2: [8, 9, 10]
+
+Estado final dos subconjuntos:
+Subconjunto 1: [1, 2, 3, 4, 8, 9, 10] (início: 0, fim: 6)
+Subconjunto 2: [5, 6, 7] (início: 7, fim: 9)
+Subconjunto 3: [11, 12, 13, 14] (início: 10, fim: 13)
+
+=== União Concluída (2.987 segundos) ===
+Subconjuntos unidos com sucesso
+
+=== Ordenacao (5.384 segundos) ===
+Iniciando ordenacao do subconjunto contendo elemento 3
+Estado inicial do subconjunto: [1, 2, 3, 4, 8, 9, 10]
+
+Estado após embaralhamento: [2, 4, 3, 1, 8, 9, 10]
+
+Usando Bubble Sort:
+Iniciando Bubble Sort com 7 elementos
+
+Estado inicial: [2, 4, 3, 1, 8, 9, 10]
+
+Passagem 1:
+  Comparando 2 com 4: mantém
+  Comparando 4 com 3: troca
+  Comparando 4 com 1: troca
+  Comparando 4 com 8: mantém
+  Comparando 8 com 9: mantém
+  Comparando 9 com 10: mantém
+  Estado atual: [2, 3, 1, 4, 8, 9, 10]
+
+Passagem 2:
+  Comparando 2 com 3: mantém
+  Comparando 3 com 1: troca
+  Comparando 3 com 4: mantém
+  Comparando 4 com 8: mantém
+  Comparando 8 com 9: mantém
+  Estado atual: [2, 1, 3, 4, 8, 9, 10]
+
+Passagem 3:
+  Comparando 2 com 1: troca
+  Comparando 2 com 3: mantém
+  Comparando 3 com 4: mantém
+  Comparando 4 com 8: mantém
+  Estado atual: [1, 2, 3, 4, 8, 9, 10]
+
+Passagem 4:
+  Comparando 1 com 2: mantém
+  Comparando 2 com 3: mantém
+  Comparando 3 com 4: mantém
+  Estado atual: [1, 2, 3, 4, 8, 9, 10]
+
+Array já está ordenado, parando...
+
+
+Estatísticas do Bubble Sort:
+Total de comparacoes: 18
+Total de movimentacoes: 12
+Tempo de ordenacao: 0.015 milissegundos
+
+=== Ordenacao Concluida (5.384 segundos) ===
+Iniciando ordenacao do subconjunto contendo elemento 3
+
+=== Ordenacao (6.859 segundos) ===
+Iniciando ordenacao do subconjunto contendo elemento 3
+Estado inicial do subconjunto: [1, 2, 3, 4, 8, 9, 10]
+
+Estado após embaralhamento: [4, 2, 8, 10, 3, 1, 9]
+
+Usando Insertion Sort:
+Iniciando Insertion Sort com 7 elementos
+
+Inserindo elemento A[1] = 2:
+  Comparando 4 com 2: move para direita
+  Estado atual: [2, 4, 8, 10, 3, 1, 9]
+
+Inserindo elemento A[2] = 8:
+  Elemento 8 já está na posição correta
+  Estado atual: [2, 4, 8, 10, 3, 1, 9]
+
+Inserindo elemento A[3] = 10:
+  Elemento 10 já está na posição correta
+  Estado atual: [2, 4, 8, 10, 3, 1, 9]
+
+Inserindo elemento A[4] = 3:
+  Comparando 10 com 3: move para direita
+  Comparando 8 com 3: move para direita
+  Comparando 4 com 3: move para direita
+  Estado atual: [2, 3, 4, 8, 10, 1, 9]
+
+Inserindo elemento A[5] = 1:
+  Comparando 10 com 1: move para direita
+  Comparando 8 com 1: move para direita
+  Comparando 4 com 1: move para direita
+  Comparando 3 com 1: move para direita
+  Comparando 2 com 1: move para direita
+  Estado atual: [1, 2, 3, 4, 8, 10, 9]
+
+Inserindo elemento A[6] = 9:
+  Comparando 10 com 9: move para direita
+  Estado atual: [1, 2, 3, 4, 8, 9, 10]
+
+
+Estatísticas do Insertion Sort:
+Total de comparações: 12
+Total de movimentacoes: 14
+Tempo de ordenacao: 0.016 milissegundos
+
+=== Ordenacao Concluida (6.859 segundos) ===
+Iniciando ordenacao do subconjunto contendo elemento 3
+
+=== Ordenacao (8.405 segundos) ===
+Iniciando ordenacao do subconjunto contendo elemento 3
+Estado inicial do subconjunto: [1, 2, 3, 4, 8, 9, 10]
+
+Estado após embaralhamento: [3, 1, 8, 9, 2, 4, 10]
+
+Usando Merge Sort:
+Iniciando Merge Sort com 7 elementos
+
+Estado inicial: [3, 1, 8, 9, 2, 4, 10]
+
+Dividindo array [3, 1, 8, 9, 2, 4, 10] em duas partes
+  Dividindo array [3, 1, 8, 9] em duas partes
+    Dividindo array [3, 1] em duas partes
+    Comparando 3 com 1: escolhe 1 da direita
+    Copiando elemento restante da esquerda: 3
+    Dividindo array [8, 9] em duas partes
+    Comparando 8 com 9: escolhe 8 da esquerda
+    Copiando elemento restante da direita: 9
+    Comparando 1 com 8: escolhe 1 da esquerda
+    Comparando 3 com 8: escolhe 3 da esquerda
+    Copiando elemento restante da direita: 8
+    Copiando elemento restante da direita: 9
+  Dividindo array [2, 4, 10] em duas partes
+    Dividindo array [2, 4] em duas partes
+    Comparando 2 com 4: escolhe 2 da esquerda
+    Copiando elemento restante da direita: 4
+    Comparando 2 com 10: escolhe 2 da esquerda
+    Comparando 4 com 10: escolhe 4 da esquerda
+    Copiando elemento restante da direita: 10
+    Comparando 1 com 2: escolhe 1 da esquerda
+    Comparando 3 com 2: escolhe 2 da direita
+    Comparando 3 com 4: escolhe 3 da esquerda
+    Comparando 8 com 4: escolhe 4 da direita
+    Comparando 8 com 10: escolhe 8 da esquerda
+    Comparando 9 com 10: escolhe 9 da esquerda
+    Copiando elemento restante da direita: 10
+
+Estado final: [1, 2, 3, 4, 8, 9, 10]
+
+Estatísticas do Merge Sort:
+Total de comparações: 13
+Total de movimentações: 40
+Tempo de ordenacao: 0.027 milissegundos
+
+=== Ordenacao Concluida (8.405 segundos) ===
+Iniciando ordenacao do subconjunto contendo elemento 3
+
+=== Ordenacao (9.935 segundos) ===
+Iniciando ordenacao do subconjunto contendo elemento 3
+Estado inicial do subconjunto: [1, 2, 3, 4, 8, 9, 10]
+
+Estado após embaralhamento: [4, 10, 3, 9, 2, 1, 8]
+
+Usando Quick Sort:
+Iniciando Quick Sort com 7 elementos
+
+Estado inicial: [4, 10, 3, 9, 2, 1, 8]
+
+  Pivo escolhido: 8
+    Comparando A[0]=4 com pivo 8: mantém (já está na posição correta)
+    Comparando A[1]=10 com pivo 8: mantém
+    Comparando A[2]=3 com pivo 8: troca
+      Trocando A[1]=10 com A[2]=3
+    Comparando A[3]=9 com pivo 8: mantém
+    Comparando A[4]=2 com pivo 8: troca
+      Trocando A[2]=10 com A[4]=2
+    Comparando A[5]=1 com pivo 8: troca
+      Trocando A[3]=9 com A[5]=1
+  Colocando pivo na posição final 4
+  Pivo escolhido: 1
+    Comparando A[0]=4 com pivo 1: mantém
+    Comparando A[1]=3 com pivo 1: mantém
+    Comparando A[2]=2 com pivo 1: mantém
+  Colocando pivo na posição final 0
+  Pivo escolhido: 4
+    Comparando A[1]=3 com pivo 4: mantém (já está na posição correta)
+    Comparando A[2]=2 com pivo 4: mantém (já está na posição correta)
+  Pivo escolhido: 2
+    Comparando A[1]=3 com pivo 2: mantém
+  Colocando pivo na posição final 1
+  Pivo escolhido: 10
+    Comparando A[5]=9 com pivo 10: mantém (já está na posição correta)
+
+Estado final: [1, 2, 3, 4, 8, 9, 10]
+
+Estatísticas do Quick Sort:
+Total de comparacoes: 13
+Total de movimentacoes: 18
+Tempo de ordenacao: 0.015 milissegundos
+
+=== Ordenacao Concluida (9.935 segundos) ===
+Iniciando ordenacao do subconjunto contendo elemento 3
+
+====== Resultado Final ======
+Tempo total de execução: 10.534000 segundos
+Tamanho do vetor (n): 14
+Número de subconjuntos (k): 3
+
+Estado final do vetor:
+[1, 2, 3, 4, 8, 9, 10, 5, 6, 7, 11, 12, 13, 14]
+
+Estado final dos subconjuntos:
+Subconjunto 1: [1, 2, 3, 4, 8, 9, 10] (início: 0, fim: 6)
+Subconjunto 2: [5, 6, 7] (início: 7, fim: 9)
+Subconjunto 3: [11, 12, 13, 14] (início: 10, fim: 13)
