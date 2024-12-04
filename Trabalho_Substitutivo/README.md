@@ -4,7 +4,7 @@ Este projeto implementa algoritmos de ordenação e operações com conjuntos di
 
 ## 📹 Vídeo Explicativo
 Para uma explicação detalhada do código e demonstração das funcionalidades, assista ao vídeo:
-[Explicação do Código - YouTube](https://www.youtube.com/watch?v=Vl7Z7o80rtA)
+[Explicação do Código - YouTube](https://www.youtube.com/watch?v=ZPXSHdjV8Sk&authuser=1)
 
 ## 🎯 Objetivos
 - Implementar algoritmos de ordenação clássicos
